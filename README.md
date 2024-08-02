@@ -1,4 +1,8 @@
-## Hi there 👋
+## 🏃‍♀️ Activities in Public Repository 
+<div align="left"> 
+  <img alt="Top Langs" height="170px" src="https://github-readme-stats.vercel.app/api?username=okmethod" />
+  <img alt="github stats" height="170px" src="https://github-readme-stats.vercel.app/api/top-langs/?username=okmethod" />
+</div>
 
 <!--
 **okmethod/okmethod** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
