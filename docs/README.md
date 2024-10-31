@@ -1,8 +1,7 @@
 # index
 
 ## 実装
-- コーディングの指針
-  - [リーダブルコード](./readable-code/README.md)
+- [コーディングの心得](./coding-guide/README.md)
 - Webセキュリティの指針
   - [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/index.html)
   - [OWASP Secure Headers Project](https://owasp.org/www-project-secure-headers/)

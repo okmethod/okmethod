@@ -1,6 +1,4 @@
-# リーダブルコード
-
-参考: [O'Reilly The Art of Readable Code](https://mcusoft.wordpress.com/wp-content/uploads/2015/04/the-art-of-readable-code.pdf)
+# コーディングの心得
 
 ## 大原則：理解しやすいコードを書く！
 - コードは、他の人(未来の自分を含む)が最短時間で理解できるように書く
@@ -22,3 +20,6 @@
 
 ## テスト実装
 - ふが
+
+## 参考
+- [O'Reilly The Art of Readable Code](https://mcusoft.wordpress.com/wp-content/uploads/2015/04/the-art-of-readable-code.pdf)
