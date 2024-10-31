@@ -7,7 +7,7 @@
   - [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/index.html)
   - [OWASP Secure Headers Project](https://owasp.org/www-project-secure-headers/)
 - ライセンス
-  - OSSライセンス一覧
+  - [OSSライセンス一覧](./tips/oss-license.md)
 - 技術別ノウハウ集
   - [Python](./tips/Python.md)
   - [TypeScript](./tips/TypeScript.md)
