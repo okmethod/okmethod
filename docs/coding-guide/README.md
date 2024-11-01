@@ -24,3 +24,4 @@
 
 ## 参考
 - [O'Reilly The Art of Readable Code](https://mcusoft.wordpress.com/wp-content/uploads/2015/04/the-art-of-readable-code.pdf)
+- [プログラマが知るべき97のこと](https://プログラマが知るべき97のこと.com)
