@@ -1,0 +1,13 @@
+services:
+  svelte-app:
+    image: node:22-slim
+    ports:
+      - 5173:5173
+    working_dir: /app
+    volumes:
+      - ./frontends/typescript-svelte:/app
+      - svelte-app-node-modules:/app/node_modules
+    command: /bin/sh -c "npm install && npm run dev"
+
+volumes:
+  svelte-app-node-modules:
