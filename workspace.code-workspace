@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "practices/backends/python-fastapi"
+		},
+		{
+			"path": "practices/frontends/typescript-svelte"
+		},
+		{
+			"path": "docs"
+		},
+	],
+	"settings": {}
+}

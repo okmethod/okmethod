@@ -8,6 +8,8 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "files.exclude": {
-   "docs": true,
+    "practices/backends": true,
+    "practices/frontends": true,
+    "docs": true
   }
 }
