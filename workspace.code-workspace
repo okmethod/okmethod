@@ -10,6 +10,9 @@
       "path": "practices/backends/typescript-express"
     },
     {
+      "path": "practices/backends/go-gin"
+    },
+    {
       "path": "practices/frontends/typescript-svelte"
     },
     {

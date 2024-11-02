@@ -24,6 +24,18 @@ services:
     command: /bin/sh -c "npm ci && npm run dev"
     tty: true
 
+  gin-app:
+    build:
+      context: ./backends/go-gin
+      target: development
+    ports:
+      - 8080:8080
+    working_dir: /app
+    volumes:
+      - ./backends/go-gin:/app
+    command: go run main.go
+    tty: true
+
   svelte-app:
     depends_on:
       - fastapi-app
