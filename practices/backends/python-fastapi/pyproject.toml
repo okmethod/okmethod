@@ -10,6 +10,34 @@ python = "^3.11"
 fastapi = "^0.115.4"
 uvicorn = "^0.32.0"
 
+[tool.poetry.group.dev.dependencies]
+poethepoet = "^0.29.0"
+ruff = "^0.7.2"
+mypy = "^1.13.0"
+
+
+#### Poe the Poet Defining tasks ####
+# https://poethepoet.natn.io/tasks/index.html
+
+[tool.poe.tasks.format]
+help = "Run ruff format"
+cmd = "ruff format ."
+
+[tool.poe.tasks.format-fix]
+help = "Run ruff format --fix"
+cmd = "ruff format . --fix"
+
+[tool.poe.tasks.ruff-lint]
+help = "Run ruff lint"
+cmd = "ruff check ."
+
+[tool.poe.tasks.mypy-lint]
+help = "Run mypy lint"
+cmd = "mypy ."
+
+[tool.poe.tasks.lint]
+help = "Run lint all"
+sequence = ["format", "ruff-lint", "mypy-lint"]
 
 [build-system]
 requires = ["poetry-core"]
