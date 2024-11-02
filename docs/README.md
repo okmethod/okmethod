@@ -8,9 +8,8 @@
 - ライセンス
   - [OSSライセンス一覧](./tips/oss-license.md)
 - 技術別ノウハウ集
+  - [Github](./tips/Github.md)
   - [Python](./tips/Python.md)
   - [TypeScript](./tips/TypeScript.md)
   - [Docker](./tips/Docker.md)
   - [Terraform](./tips/Terraform.md)
-  - [GithubAction](./tips/GithubAction.md)
-
