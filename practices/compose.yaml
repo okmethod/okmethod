@@ -1,4 +1,16 @@
 services:
+  fastapi-app:
+    build:
+      context: ./backends/python-fastapi
+      target: development
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backends/python-fastapi:/app
+      - fastapi-app-venv:/app/.venv
+    command: [ "uvicorn", "src.main:app", "--host", "0.0.0.0", "--reload" ]
+    tty: true
+
   svelte-app:
     image: node:22-slim
     ports:
@@ -10,4 +22,5 @@ services:
     command: /bin/sh -c "npm install && npm run dev"
 
 volumes:
+  fastapi-app-venv:
   svelte-app-node-modules:
