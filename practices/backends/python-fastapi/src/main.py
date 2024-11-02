@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 
-from src.routes import api
+from src.routes import heartbeat
 
 app = FastAPI()
 
 app.include_router(
-    api.router,
-    prefix="/api",
+    heartbeat.router,
+    prefix="/api/heartbeat",
     tags=["Root"],
 )

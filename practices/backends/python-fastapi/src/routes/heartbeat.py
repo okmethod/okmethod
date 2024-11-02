@@ -8,9 +8,9 @@ router = APIRouter()
 
 
 @router.get(
-    path="/heartbeat",
+    path="",
     response_model=HeartbeatResponse,
 )
 def heartbeat() -> HeartbeatResponse:
-    now = datetime.now(tz=timezone.utc).isoformat()
-    return HeartbeatResponse(alive=now)
+    now = datetime.now(tz=timezone.utc)
+    return HeartbeatResponse(alive=now.isoformat())
