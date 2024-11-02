@@ -1,21 +1,22 @@
 package main
 
 import (
-	"net/http"
-	"time"
+	"gin-app/routes"
 
 	"github.com/gin-gonic/gin"
 )
 
-func main() {
+func setupRouter() *gin.Engine {
 	r := gin.Default()
 
-	r.GET("/api/heartbeat", func(c *gin.Context) {
-		now := time.Now()
-		c.JSON(http.StatusOK, gin.H{
-			"alive": now.Format(time.RFC3339),
-		})
-	})
+	apiGroup := r.Group("/api")
+	apiGroup.GET("/heartbeat", routes.HeartbeatRouter)
 
-	r.Run() // listen and serve on 0.0.0.0:8080
+	return r
+}
+
+func main() {
+	r := setupRouter()
+	r.SetTrustedProxies(nil) // disable trusted proxies
+	r.Run()                  // listen and serve on 0.0.0.0:8080
 }
