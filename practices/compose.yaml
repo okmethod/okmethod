@@ -40,12 +40,14 @@ services:
     depends_on:
       - fastapi-app
       - express-app
+      - gin-app
     build:
       context: ./frontends/typescript-svelte
       target: development
       args:
         VITE_FASTAPI_PROXY_TARGET: http://fastapi-app:8000
         VITE_EXPRESS_PROXY_TARGET: http://express-app:3000
+        VITE_GIN_PROXY_TARGET: http://gin-app:8080
     ports:
       - 5173:5173
     working_dir: /app

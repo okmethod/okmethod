@@ -1,7 +1,7 @@
 import { constructRequestInit, fetchApi } from "$lib/utils/request";
 import type { ResponseHeartbeatJson } from "$lib/types/heartbeat";
 
-type supportedPrefix = "fastapi" | "express";
+type supportedPrefix = "fastapi" | "express" | "gin";
 
 async function getHeartbeat(
   fetchFunction: typeof window.fetch,
@@ -19,3 +19,4 @@ async function getHeartbeat(
 
 export const getFastapiHeartbeat = (fetchFunction: typeof window.fetch) => getHeartbeat(fetchFunction, "fastapi");
 export const getExpressHeartbeat = (fetchFunction: typeof window.fetch) => getHeartbeat(fetchFunction, "express");
+export const getGinHeartbeat = (fetchFunction: typeof window.fetch) => getHeartbeat(fetchFunction, "gin");

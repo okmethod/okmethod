@@ -19,6 +19,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/express/, "/api"),
       },
+      "/gin": {
+        target: process.env.VITE_GIN_PROXY_TARGET as string,
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/gin/, "/api"),
+      },
     },
   },
   plugins: [sveltekit(), purgeCss()],

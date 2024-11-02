@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getFastapiHeartbeat, getExpressHeartbeat } from "$lib/api/getHeartbeat";
+  import { getFastapiHeartbeat, getExpressHeartbeat, getGinHeartbeat } from "$lib/api/getHeartbeat";
   import type { ResponseHeartbeatJson } from "$lib/types/heartbeat";
 
   let fastapiResponse: ResponseHeartbeatJson | null = null;
@@ -10,6 +10,11 @@
   let expressResponse: ResponseHeartbeatJson | null = null;
   async function handleExpressHeartbeat(): Promise<void> {
     expressResponse = await getExpressHeartbeat(window.fetch);
+  }
+
+  let ginResponse: ResponseHeartbeatJson | null = null;
+  async function handleGinHeartbeat(): Promise<void> {
+    ginResponse = await getGinHeartbeat(window.fetch);
   }
 </script>
 
@@ -24,6 +29,10 @@
       <div class="flex items-center space-x-4">
         <button type="button" class="btn variant-filled" on:click={handleExpressHeartbeat}> Call Express </button>
         <p>Response: {expressResponse ? expressResponse.alive : "Nothing"}</p>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button type="button" class="btn variant-filled" on:click={handleGinHeartbeat}> Call Gin </button>
+        <p>Response: {ginResponse ? ginResponse.alive : "Nothing"}</p>
       </div>
     </div>
   </div>
