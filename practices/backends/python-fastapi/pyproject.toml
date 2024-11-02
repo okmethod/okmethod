@@ -39,6 +39,31 @@ cmd = "mypy ."
 help = "Run lint all"
 sequence = ["format", "ruff-lint", "mypy-lint"]
 
+
+#### Ruff Configuration ####
+# https://docs.astral.sh/ruff/configuration
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle
+    "W",  # pycodestyle warnings
+    "F",  # Pyflakes
+    "C",  # McCabe complexity
+    "N",  # PEP8 Naming
+    "Q",  # Flake8 Quotes
+    "B",  # Bugbear
+    "A",  # Flake8 Builtins
+    # "D",  # Docstring Conventions
+    "I",  # Import Order
+    "T",  # Type Annotations
+    "S",  # Security
+    "RUF" # Ruff Specific
+]
+
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
