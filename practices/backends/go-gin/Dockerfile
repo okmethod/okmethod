@@ -14,7 +14,6 @@ FROM base AS development
 ARG AIR_VERSION
 RUN go install github.com/air-verse/air@v${AIR_VERSION}
 COPY . .
-CMD ["air"]
 
 FROM base AS build
 COPY . .

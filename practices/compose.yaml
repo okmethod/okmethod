@@ -33,7 +33,7 @@ services:
     working_dir: /app
     volumes:
       - ./backends/go-gin:/app
-    command: go run main.go
+    command: air -c .air.toml
     tty: true
 
   svelte-app:
