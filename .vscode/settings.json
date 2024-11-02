@@ -1,12 +1,4 @@
 {
-  "editor.formatOnSave": true,
-  "prettier.requireConfig": true,
-  "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
   "files.exclude": {
     "practices/backends": true,
     "practices/frontends": true,
