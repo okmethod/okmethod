@@ -11,7 +11,23 @@ services:
     command: [ "uvicorn", "src.main:app", "--host", "0.0.0.0", "--reload" ]
     tty: true
 
+  express-app:
+    build:
+      context: ./backends/typescript-express
+      target: development
+    ports:
+      - 3000:3000
+    working_dir: /app
+    volumes:
+      - ./backends/typescript-express:/app
+      - express-app-node-modules:/app/node_modules
+    command: /bin/sh -c "npm ci && npm run dev"
+    tty: true
+
   svelte-app:
+    depends_on:
+      - fastapi-app
+      - express-app
     build:
       context: ./frontends/typescript-svelte
       target: development
@@ -23,8 +39,9 @@ services:
     volumes:
       - ./frontends/typescript-svelte:/app
       - svelte-app-node-modules:/app/node_modules
-    command: /bin/sh -c "npm install && npm run dev"
+    command: /bin/sh -c "npm ci && npm run dev"
 
 volumes:
   fastapi-app-venv:
+  express-app-node-modules:
   svelte-app-node-modules:

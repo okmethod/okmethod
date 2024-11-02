@@ -7,6 +7,9 @@
       "path": "practices/backends/python-fastapi"
     },
     {
+      "path": "practices/backends/typescript-express"
+    },
+    {
       "path": "practices/frontends/typescript-svelte"
     },
     {
