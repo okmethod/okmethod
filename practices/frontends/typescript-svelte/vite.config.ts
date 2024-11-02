@@ -10,9 +10,14 @@ export default defineConfig({
   server: {
     proxy: {
       "/fastapi": {
-        target: process.env.VITE_FASTAPI_PROXY_TARGET,
+        target: process.env.VITE_FASTAPI_PROXY_TARGET as string,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/fastapi/, "/api"),
+      },
+      "/express": {
+        target: process.env.VITE_EXPRESS_PROXY_TARGET as string,
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/express/, "/api"),
       },
     },
   },
