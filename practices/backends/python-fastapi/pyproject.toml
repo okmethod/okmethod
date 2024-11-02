@@ -63,6 +63,39 @@ select = [
     "RUF" # Ruff Specific
 ]
 
+#### mypy Configuration ####
+# https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml-file
+# https://mypy.readthedocs.io/en/stable/command_line.html#the-mypy-command-line
+
+[tool.mypy]
+## Disallow dynamic typing
+disallow_any_unimported = true
+disallow_any_expr = false
+disallow_any_decorated = true
+disallow_any_explicit = true
+disallow_any_generics = true
+disallow_subclassing_any = true
+## Untyped definitions and calls
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+## Configuring warnings
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_unreachable = true
+## Miscellaneous strictness flags
+strict_equality = true
+extra_checks = true
+## Configuring error messages
+show_error_context = true
+show_column_numbers = true
+show_error_end = true
+show_error_code_links = true
+pretty = true
+color_output = true
+error_summary = true
 
 [build-system]
 requires = ["poetry-core"]
