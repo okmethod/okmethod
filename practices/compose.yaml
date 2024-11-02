@@ -15,6 +15,8 @@ services:
     build:
       context: ./frontends/typescript-svelte
       target: development
+      args:
+        VITE_FASTAPI_PROXY_TARGET: http://fastapi-app:8000
     ports:
       - 5173:5173
     working_dir: /app
