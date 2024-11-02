@@ -7,6 +7,14 @@ const port = 3000;
 
 app.get("/api/heartbeat", heartbeat);
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+const startServer = () => {
+  app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
+  });
+};
+
+if (process.env.NODE_ENV !== "test") {
+  startServer(); // テスト環境ではサーバーを起動しない
+}
+
+export default app;
