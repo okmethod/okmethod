@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from fastapi import APIRouter
 
@@ -12,5 +12,5 @@ router = APIRouter()
     response_model=HeartbeatResponse,
 )
 def heartbeat() -> HeartbeatResponse:
-    now = datetime.utcnow().isoformat()
+    now = datetime.now(tz=timezone.utc).isoformat()
     return HeartbeatResponse(alive=now)

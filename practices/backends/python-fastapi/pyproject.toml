@@ -49,26 +49,82 @@ cmd = "pytest ."
 
 #### Ruff Configuration ####
 # https://docs.astral.sh/ruff/configuration
+# https://docs.astral.sh/ruff/rules/
 
 [tool.ruff]
 line-length = 120
 
 [tool.ruff.lint]
 select = [
-    "E",  # pycodestyle
-    "W",  # pycodestyle warnings
-    "F",  # Pyflakes
-    "C",  # McCabe complexity
-    "N",  # PEP8 Naming
-    "Q",  # Flake8 Quotes
-    "B",  # Bugbear
-    "A",  # Flake8 Builtins
-    # "D",  # Docstring Conventions
-    "I",  # Import Order
-    "T",  # Type Annotations
-    "S",  # Security
-    "RUF" # Ruff Specific
+    "F",      # Pyflakes
+    "E",      # pycodestyle Error
+    "W",      # pycodestyle Warning
+    "C90",    # mccabe
+    "I",      # isort
+    "N",      # pep8-naming
+    # "D",      # pydocstyle
+    "UP",     # pyupgrade
+    "YTT",    # flake8-2020
+    "ANN",    # flake8-annotations
+    "ASYNC",  # flake8-async
+    "S",      # flake8-bandit
+    "BLE",    # flake8-blind-except
+    "FBT",    # flake8-boolean-trap
+    "B",      # flake8-bugbear
+    "A",      # flake8-builtins
+    "COM",    # flake8-commas
+    "CPY",    # flake8-copyright
+    "C4",     # flake8-comprehensions
+    "DTZ",    # flake8-datetimez
+    "T10",    # flake8-debugger
+    "DJ",     # flake8-django
+    "EM",     # flake8-errmsg
+    "EXE",    # flake8-executable
+    "FA",     # flake8-future-annotations
+    "ISC",    # flake8-implicit-str-concat
+    "ICN",    # flake8-import-conventions
+    "LOG",    # flake8-logging
+    "G",      # flake8-logging-format
+    "INP",    # flake8-no-pep420
+    "PIE",    # flake8-pie
+    "T20",    # flake8-print
+    "PYI",    # flake8-pyi
+    "PT",     # flake8-pytest-style
+    "Q",      # flake8-quotes
+    "RSE",    # flake8-raise
+    "RET",    # flake8-return
+    "SLF",    # flake8-self
+    "SLOT",   # flake8-slots
+    "SIM",    # flake8-simplify
+    "TID",    # flake8-tidy-imports
+    "TCH",    # flake8-type-checking
+    "INT",    # flake8-gettext
+    "ARG",    # flake8-unused-arguments
+    "PTH",    # flake8-use-pathlib
+    "TD",     # flake8-todos
+    "FIX",    # flake8-fixme
+    "ERA",    # eradicate
+    "PD",     # pandas-vet
+    "PGH",    # pygrep-hooks
+    "PLC",    # Pylint Convention
+    "PLE",    # Pylint Error
+    "PLR",    # Pylint Refactor
+    "PLW",    # Pylint Warning
+    "TRY",    # tryceratops
+    "FLY",    # flynt
+    "NPY",    # NumPy-specific rules
+    "FAST",   # FastAPI
+    "AIR",    # Airflow
+    "PERF",   # perflint
+    "FURB",   # refurb
+    "DOC",    # pydoclint
+    "RUF",    # Ruff-specific rules
+    "CPY001", # must be explicitly enabled, still in development - checks for copyright header
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]
+
 
 #### mypy Configuration ####
 # https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml-file
