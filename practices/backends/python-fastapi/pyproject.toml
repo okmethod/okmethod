@@ -18,6 +18,9 @@ mypy = "^1.13.0"
 
 #### Poe the Poet Defining tasks ####
 # https://poethepoet.natn.io/tasks/index.html
+pytest = "^8.3.3"
+pytest-mock = "^3.14.0"
+httpx = "^0.27.2"
 
 [tool.poe.tasks.format]
 help = "Run ruff format"
@@ -38,6 +41,10 @@ cmd = "mypy ."
 [tool.poe.tasks.lint]
 help = "Run lint all"
 sequence = ["format", "ruff-lint", "mypy-lint"]
+
+[tool.poe.tasks.test]
+help = "Run pytest"
+cmd = "pytest ."
 
 
 #### Ruff Configuration ####
@@ -96,6 +103,14 @@ show_error_code_links = true
 pretty = true
 color_output = true
 error_summary = true
+
+
+#### pytest Configuration ####
+# https://docs.pytest.org/en/stable/reference/customize.html#pyproject-toml
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
 
 [build-system]
 requires = ["poetry-core"]
