@@ -12,7 +12,9 @@ services:
     tty: true
 
   svelte-app:
-    image: node:22-slim
+    build:
+      context: ./frontends/typescript-svelte
+      target: development
     ports:
       - 5173:5173
     working_dir: /app
