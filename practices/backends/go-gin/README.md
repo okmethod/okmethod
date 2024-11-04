@@ -7,34 +7,30 @@
 
 ## セットアップの流れ
 
-### go をセットアップする
+### go
 
-- インストール
+```bash
+brew install go
 
-  - 公式ドキュメント: [Download and install](https://go.dev/doc/install)
-  - Mac の場合、 homebrew を使うことも可能
-    ```bash
-    brew install go
-    ```
+# 環境変数の設定: zsh を使う場合（bash を使う場合は .bashrc に置き換える）
+echo 'export GOPATH=$HOME/go' >> ~/.zshrc
+echo 'export GOROOT=$(brew --prefix go)/libexec' >> ~/.zshrc
+echo 'export PATH=$PATH:$GOPATH/bin:$GOROOT/bin' >> ~/.zshrc
+echo 'export GOPROXY=https://proxy.golang.org,direct' >> ~/.zshrc
+echo 'export GOSUMDB=sum.golang.org' >> ~/.zshrc
+source ~/.zshrc
 
-- 環境変数の設定
+go version
+```
 
-  - zsh を使う場合（bash を使う場合は .bashrc に置き換える）
+- [公式ドキュメント](https://go.dev/doc/install)
+  - (brew ではなく、インストーラで `/usr/local/go` に導入している)
 
-    ```bash
-    echo 'export GOPATH=$HOME/go' >> ~/.zshrc
-    echo 'export GOROOT=$(brew --prefix go)/libexec' >> ~/.zshrc
-    echo 'export PATH=$PATH:$GOPATH/bin:$GOROOT/bin' >> ~/.zshrc
-    echo 'export GOPROXY=https://proxy.golang.org,direct' >> ~/.zshrc
-    echo 'export GOSUMDB=sum.golang.org' >> ~/.zshrc
-    source ~/.zshrc
-    ```
+### gin
 
-  - インストール確認
-    ```bash
-    go version
-    ```
+```bash
+go get -u github.com/gin-gonic/gin
+# 以下略
+```
 
-### gin をセットアップする
-
-- 公式ドキュメント: [Quickstart](https://gin-gonic.com/docs/quickstart/)
+- [公式ドキュメント](https://gin-gonic.com/docs/quickstart/)
