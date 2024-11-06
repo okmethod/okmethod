@@ -1,0 +1,15 @@
+services:
+  t3-app:
+    build:
+      context: .
+      target: development
+    ports:
+      - 3000:3000
+    working_dir: /app
+    volumes:
+      - .:/app
+      - t3-app-node-modules:/app/node_modules
+    command: /bin/sh -c "npm ci && npm run dev"
+
+volumes:
+  t3-app-node-modules:
