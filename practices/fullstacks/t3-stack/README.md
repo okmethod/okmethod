@@ -4,9 +4,9 @@
 
 - プログラム言語: TypeScript
 - パッケージ管理: npm
+- Web(フロントエンド)フレームワーク: Next.js
 - CSS フレームワーク: TailwindCSS
 - RPC フレームワーク: tRPC
-- Web フレームワーク: Next.js
 
 ## セットアップの流れ
 

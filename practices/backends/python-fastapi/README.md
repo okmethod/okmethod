@@ -4,10 +4,10 @@
 
 - プログラム言語: Python
 - パッケージ管理: Poetry
+- Web(バックエンド)フレームワーク: FastAPI
 - linter/formatter: Ruff
 - 型チェック: mypy
 - テスト: pytest
-- Web フレームワーク: FastAPI
 
 ## セットアップの流れ
 

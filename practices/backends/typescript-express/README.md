@@ -4,9 +4,9 @@
 
 - プログラム言語: TypeScript
 - パッケージ管理: npm
+- Web(バックエンド)フレームワーク: Express.js (+ Node.js)
 - linter/formatter: ESLint, Prettier
 - テスト: jest, supertest
-- Web フレームワーク: Express.js (+ Node.js)
 
 ## セットアップの流れ
 

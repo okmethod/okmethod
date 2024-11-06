@@ -1,3 +1,36 @@
+# svelte-app
+
+## ツールチェーン
+
+- プログラム言語: TypeScript
+- パッケージ管理: npm
+- Web(フロントエンド)フレームワーク: Svelte
+- フロントエンドビルド: Vite
+- CSS フレームワーク: TailwindCSS
+- UI コンポーネントライブラリ: Skeleton
+- linter/formatter: ESLint, Prettier
+- テスト: playwright
+
+## セットアップの流れ
+
+### node
+
+```bash
+brew install node
+node -v
+npm -v
+```
+
+### Create Skeleton App
+
+```bash
+npm create skeleton-app@latest
+```
+
+- [公式ドキュメント](https://www.skeleton.dev/docs/get-started)
+
+以下、自動生成された README
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
