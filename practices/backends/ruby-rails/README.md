@@ -17,7 +17,7 @@ brew install ruby
 # 環境変数の設定: zsh を使う場合（bash を使う場合は .bashrc に置き換える）
 echo 'export RUBYROOT=$(brew --prefix ruby)' >> ~/.zshrc
 echo 'export PATH=$RUBYROOT/bin:$PATH' >> ~/.zshrc
-echo 'export PATH=$RUBYROOT/lib/ruby/gems/3.3.0/bin:$PATH' >> ~/.zshrc
+echo 'export PATH=/opt/homebrew/lib/ruby/gems/3.3.0/bin:$PATH' >> ~/.zshrc
 source ~/.zshrc
 
 ruby --version
@@ -46,6 +46,10 @@ sqlite3 --version
 ```bash
 gem install rails
 rails --version
+
+rails new . --minimal
+# APIサーバだけでなく、DB,テンプレートエンジン等も作られる。
+# TODO: 気が向いたら続きを試す。
 ```
 
 - [公式ドキュメント](https://guides.rubyonrails.org/getting_started.html#creating-a-new-rails-project)
