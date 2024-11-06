@@ -2,6 +2,7 @@
   "files.exclude": {
     "practices/backends": true,
     "practices/frontends": true,
+    "practices/fullstacks": true,
     "docs": true
   }
 }

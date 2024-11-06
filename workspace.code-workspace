@@ -13,10 +13,10 @@
       "path": "practices/backends/go-gin"
     },
     {
-      "path": "practices/backends/ruby-rails"
+      "path": "practices/frontends/typescript-svelte"
     },
     {
-      "path": "practices/frontends/typescript-svelte"
+      "path": "practices/fullstacks/ruby-on-rails"
     },
     {
       "path": "docs"

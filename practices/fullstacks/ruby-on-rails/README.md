@@ -1,4 +1,4 @@
-# ruby-rails
+# ruby-on-rails
 
 ## ツールチェーン
 
