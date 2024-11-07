@@ -28,7 +28,12 @@ brew install maven
 mvn -version
 
 mvn -B archetype:generate -DgroupId=edu.self -DartifactId=spring-app -Dversion=0.1.0 -DarchetypeArtifactId=maven-archetype-quickstart
-
 ```
 
 ### Spring Boot
+
+```bash
+# pom.xml を更新し、springの設定を入れる
+
+mvn dependency:tree
+```
