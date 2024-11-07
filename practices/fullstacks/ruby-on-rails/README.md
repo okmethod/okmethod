@@ -27,7 +27,7 @@ gem --version
 ### SQLite3
 
 ```bash
-brew install ruby
+brew install sqlite3
 
 # 環境変数の設定: zsh を使う場合（bash を使う場合は .bashrc に置き換える）
 echo 'export SQLITEROOT=$(brew --prefix sqlite3)' >> ~/.zshrc

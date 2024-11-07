@@ -13,6 +13,9 @@
       "path": "practices/backends/go-gin"
     },
     {
+      "path": "practices/backends/java-spring"
+    },
+    {
       "path": "practices/frontends/typescript-svelte"
     },
     {
