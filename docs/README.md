@@ -1,5 +1,13 @@
 # My CheatSheet Index
 
+## 要件定義ノウハウ
+
+- [要件定義の心得](./planning-guide/README.md)
+
+## 設計ノウハウ
+
+- [アーキテクチャ設計の心得](./architecting-guide/README.md)
+
 ## 実装ノウハウ
 
 - [コーディングの心得](./coding-guide/README.md)
