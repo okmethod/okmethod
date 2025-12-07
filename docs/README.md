@@ -59,4 +59,4 @@ coding-principles/
 ## 参考情報
 
 - [IPA デジタルスキル標準におけるロールとスキルリスト](./references/ipa-dss.md)
-- [OSS ライセンスまとめ](./references/oss-license.md)
+- [OSS ライセンスまとめ](./references/oss-license-overview.md)
