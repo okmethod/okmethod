@@ -42,9 +42,9 @@ coding-principles/
 
 ## 開発プロセス軸ナレッジ
 
-- [要件定義の心得](./planning-principles/README.md)
-- [アーキテクチャ設計の心得](./architecting-principles/README.md)
-- [コーディングの心得](./coding-principles/README.md)
+- [要件定義の心得](./development-domains/planning-principles/README.md)
+- [アーキテクチャ設計の心得](./development-domains/architecting-principles/README.md)
+- [コーディングの心得](./development-domains/coding-principles/README.md)
 
 ## 専門分野軸ナレッジ
 
