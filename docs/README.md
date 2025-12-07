@@ -48,14 +48,13 @@ coding-principles/
 
 ## 専門分野軸ナレッジ
 
-- Web セキュリティの指針(WIP)
-  - [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/index.html)
-  - [OWASP Secure Headers Project](https://owasp.org/www-project-secure-headers/)
-- [Github Tips](./specialty-domains/github-tips.md)
-- [Docker Tips](./specialty-domains/docker-tips.md)
-- [Python Tips](./specialty-domains/python-tips.md)
-- [TypeScript Tips](./specialty-domains/typescript-tips.md)
-- [Terraform Tips](./specialty-domains/terraform-tips.md)
+- [Web セキュリティ Tips](./specialty-domains/web-security-tips.md)
+- 技術スタック別
+  - [Github Tips](./specialty-domains/github-tips.md)
+  - [Docker Tips](./specialty-domains/docker-tips.md)
+  - [Python Tips](./specialty-domains/python-tips.md)
+  - [TypeScript Tips](./specialty-domains/typescript-tips.md)
+  - [Terraform Tips](./specialty-domains/terraform-tips.md)
 
 ## 参考情報
 
