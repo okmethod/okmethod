@@ -2,7 +2,7 @@
 
 ## 要件定義ノウハウ
 
-- [要件定義の心得](./planning-guide/README.md)
+- [要件定義の心得](./planning-principles/README.md)
 
 ## 設計ノウハウ
 
