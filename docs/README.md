@@ -60,3 +60,4 @@ coding-principles/
 
 - [IPA デジタルスキル標準まとめ](./references/ipa-dss-overview.md)
 - [OSS ライセンスまとめ](./references/oss-license-overview.md)
+- [個人情報保護法まとめ](./references/ppl-overview.md)
