@@ -1,25 +1,63 @@
-# My CheatSheet Index
+# Okmethod Knowledge Index
 
-## 要件定義ノウハウ
+このドキュメントは、以下の 2 つの役割を両立するように設計・構成している。
+
+- **開発者向け**: 開発者がナレッジを整理・分類・参照するための、体系化されたドキュメントとして
+- **コーディングエージェント向け**: Claude Code エージェントがコードレビューや生成を行う際に参照しやすいカスタムスキルとして
+
+---
+
+## ディレクトリ構成
+
+### 全体
+
+```
+docs/
+|-- README.md            : このファイル
+|-- development-domains/ : 開発工程軸ナレッジ
+|-- specialty-domains/   : 専門分野軸ナレッジ
+|-- references/          : 参考情報
+```
+
+### 「心得」
+
+```
+coding-principles/
+|-- README.md     : 開発者向けインデックス
+|-- SKILL.md      : エージェント向けカスタムスキル
+|-- manifest.json : エージェント向けメタデータ
+|-- assets/       : ナレッジ本体(共通)
+|  |-- 01-code.md
+|  |-- 02-logic.md
+|  |-- 03-system.md
+|  |-- cohesion-coupling-cheatsheet.md
+|  |-- naming-cheatsheet.md
+```
+
+**（補足:「心得」とは）**
+
+先人の知恵・知識体系や断片的なノウハウを集積し、工程・分野ごとに分類・整理し、自分なりの「心得」として体系化することを目指す。  
+実用レベルまで「心得」を確立できたら、カスタムスキル Ready な状態にして再利用しやすくする。  
+（「守・破・離」の実践 -> 自分流の「型」の確立 -> コーディングエージェントへの「型」の継承）
+
+## 開発プロセス軸ナレッジ
 
 - [要件定義の心得](./planning-principles/README.md)
-
-## 設計ノウハウ
-
 - [アーキテクチャ設計の心得](./architecting-principles/README.md)
-
-## 実装ノウハウ
-
 - [コーディングの心得](./coding-principles/README.md)
-- [OSS ライセンスまとめ](./tips/oss-license.md)
-- Web セキュリティの指針
+
+## 専門分野軸ナレッジ
+
+- Web セキュリティの指針(WIP)
   - [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/index.html)
   - [OWASP Secure Headers Project](https://owasp.org/www-project-secure-headers/)
+- [Github Tips](./tips/Github.md)
+- [Docker Tips](./tips/Docker.md)
+- [Python Tips](./tips/Python.md)
+- [TypeScript Tips](./tips/TypeScript.md)
+- [Terraform Tips](./tips/Terraform.md)
 
-## 技術別ノウハウ
+## 参考情報
 
-- [Github](./tips/Github.md)
-- [Docker](./tips/Docker.md)
-- [Python](./tips/Python.md)
-- [TypeScript](./tips/TypeScript.md)
-- [Terraform](./tips/Terraform.md)
+- [IPA デジタルスキル標準におけるロールとスキルリスト](./tips/ipa-dss.md)
+- [OSS ライセンスまとめ](./tips/oss-license.md)
