@@ -10,7 +10,7 @@
 
 ## 実装ノウハウ
 
-- [コーディングの心得](./coding-guide/README.md)
+- [コーディングの心得](./coding-principles/README.md)
 - [OSS ライセンスまとめ](./tips/oss-license.md)
 - Web セキュリティの指針
   - [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/index.html)
