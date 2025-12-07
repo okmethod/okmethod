@@ -6,7 +6,7 @@
 
 ## 設計ノウハウ
 
-- [アーキテクチャ設計の心得](./architecting-guide/README.md)
+- [アーキテクチャ設計の心得](./architecting-principles/README.md)
 
 ## 実装ノウハウ
 
