@@ -38,6 +38,8 @@
 - `システム要件` ・・・ 業務要件を What とした、システムの How (= 外部仕様) に当たる
 - （ `設計` ・・・ システム要件を What とした、システムの How (= 内部仕様) に当たる）
 
+**参考**: [ドキュメンテーションチートシート](./documentations-cheetsheet.md)
+
 ---
 
 ## [requirement: どのように要求を整理するか](./assets/01-requirement.md)
