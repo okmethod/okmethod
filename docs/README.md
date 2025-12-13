@@ -40,6 +40,8 @@ coding-principles/
 実用レベルまで「心得」を確立できたら、カスタムスキル Ready な状態にして再利用しやすくする。  
 （「守・破・離」の実践 -> 自分流の「型」の確立 -> コーディングエージェントへの「型」の継承）
 
+---
+
 ## 開発プロセス軸ナレッジ
 
 - [要件定義の心得](./development-domains/planning-principles/README.md)
@@ -56,8 +58,11 @@ coding-principles/
   - [TypeScript Tips](./specialty-domains/typescript-tips.md)
   - [Terraform Tips](./specialty-domains/terraform-tips.md)
 
+---
+
 ## 参考情報
 
 - [IPA デジタルスキル標準まとめ](./references/ipa-dss-overview.md)
 - [OSS ライセンスまとめ](./references/oss-license-overview.md)
 - [個人情報保護法まとめ](./references/ppl-overview.md)
+- [ISMS（情報セキュリティマネジメントシステム）まとめ](./references/isms-overview.md)
