@@ -3,6 +3,8 @@
     "practices/backends": true,
     "practices/frontends": true,
     "practices/fullstacks": true,
-    "docs": true
+    "docs/development-domains": true,
+    "docs/specialty-domains": true,
+    "docs/references": true
   }
 }
