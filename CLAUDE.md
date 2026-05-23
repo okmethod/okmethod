@@ -17,8 +17,8 @@
 - `docs/development-domains/planning-principles/`: 要件定義の心得
 - `docs/development-domains/architecting-principles/`: アーキテクチャ設計の心得
 - `docs/development-domains/coding-principles/`: コーディングの心得
-- `docs/specialty-domains/`: 特定技術別Tips
-- `docs/references/`: 外部規格・法令の概要等
+- `docs/specialty-domains/`: 恣意的・主観的な判断を含む特定技術・特定分野別Tips
+- `docs/references/`: 外部情報を客観的に整理した概要資料
 
 ## practices ディレクトリ
 
