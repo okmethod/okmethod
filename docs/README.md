@@ -58,6 +58,8 @@ coding-principles/
   - [Python Tips](./specialty-domains/python-tips.md)
   - [TypeScript Tips](./specialty-domains/typescript-tips.md)
   - [Terraform Tips](./specialty-domains/terraform-tips.md)
+- その他
+  - [ITプロジェクト ラグビーチーム理論](./specialty-domains/rugby-team-theory.md)
 
 ---
 
