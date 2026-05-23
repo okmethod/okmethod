@@ -1,0 +1,47 @@
+{
+  "folders": [
+    {
+      "path": ".",
+    },
+    {
+      "path": "docs/development-domains/planning-principles",
+    },
+    {
+      "path": "docs/development-domains/architecting-principles",
+    },
+    {
+      "path": "docs/development-domains/coding-principles",
+    },
+    {
+      "path": "docs/specialty-domains",
+    },
+    {
+      "path": "docs/references",
+    },
+    {
+      "path": "practices",
+    },
+  ],
+  "settings": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "editor.formatOnSave": true,
+    "prettier.requireConfig": true,
+    "[markdown]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "[html]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "[dockerfile]": {
+      "editor.tabSize": 4,
+    },
+  },
+}
