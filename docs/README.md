@@ -50,8 +50,6 @@ coding-principles/
 
 ## 専門分野軸ナレッジ
 
-- [開発エンジニアのためのセキュリティ知識体系まとめ](./specialty-domains/security-overview.md)
-- [Web セキュリティ Tips](./specialty-domains/web-security-tips.md)
 - 技術スタック別
   - [Github Tips](./specialty-domains/github-tips.md)
   - [Docker Tips](./specialty-domains/docker-tips.md)
@@ -66,6 +64,8 @@ coding-principles/
 ## 参考情報
 
 - [IPA デジタルスキル標準まとめ](./references/ipa-dss-overview.md)
+- [ソフトウェアエンジニアのためのセキュリティ知識体系まとめ](./references/security-governance-overview.md)
+- [Web セキュリティの勘所まとめ](./references/web-security-overview.md)
 - [OSS ライセンスまとめ](./references/oss-license-overview.md)
 - [個人情報保護法まとめ](./references/ppl-overview.md)
 - [パブリッククラウドサービスマップ](./references/public-cloud-map.md)
