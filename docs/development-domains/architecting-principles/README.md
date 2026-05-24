@@ -38,7 +38,7 @@
 
 - Input: システム要件 (What) ・・・ [要件定義の心得](../planning-principles/README.md) 参照
 - Process: アーキテクチャ設計 (How - 概念:Concept) ・・・本ガイド
-- Output: コード実装 (How - 実体:Substance) ・・・ [コーディングの心得](./development-domains/coding-principles/README.md)
+- Output: コード実装 (How - 実体:Substance) ・・・ [コーディングの心得](../coding-principles/README.md)
 
 ---
 
