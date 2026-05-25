@@ -57,6 +57,7 @@ coding-principles/
   - [TypeScript Tips](./specialty-domains/typescript-tips.md)
   - [Terraform Tips](./specialty-domains/terraform-tips.md)
 - その他
+  - [弁証法的エンジニアリングのすすめ](./specialty-domains/dialectics-engineering.md)
   - [ITプロジェクト ラグビーチーム理論](./specialty-domains/rugby-team-theory.md)
 
 ---
