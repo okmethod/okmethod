@@ -70,3 +70,4 @@ coding-principles/
 - [OSS ライセンスまとめ](./references/oss-license-overview.md)
 - [個人情報保護法まとめ](./references/ppl-overview.md)
 - [パブリッククラウドサービスマップ](./references/public-cloud-map.md)
+- [SECIモデル（組織的知識創造プロセス）まとめ](./references/seci-model-overview.md)
