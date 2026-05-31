@@ -10,6 +10,9 @@
       "path": "docs/development-domains/architecting-principles",
     },
     {
+      "path": "docs/development-domains/testing-principles",
+    },
+    {
       "path": "docs/development-domains/coding-principles",
     },
     {

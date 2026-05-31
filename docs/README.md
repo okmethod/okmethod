@@ -46,6 +46,7 @@ coding-principles/
 
 - [要件定義の心得](./development-domains/planning-principles/README.md)
 - [アーキテクチャ設計の心得](./development-domains/architecting-principles/README.md)
+- [テスト設計の心得](./development-domains/testing-principles/README.md)
 - [コーディングの心得](./development-domains/coding-principles/README.md)
 
 ## 専門分野軸ナレッジ
