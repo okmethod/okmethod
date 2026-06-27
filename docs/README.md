@@ -54,6 +54,18 @@ claude plugin marketplace update
 claude plugin update okmethod@okmethod-marketplace
 ```
 
+**公式スキルとの使い分け**:
+
+心得スキルは「**設計判断の議論・レビュー**」を目的としており、コードや差分を直接操作する公式スキルとはフェーズが異なる。
+
+| やりたいこと                                     | 使うもの                   |
+| ------------------------------------------------ | -------------------------- |
+| PR・差分のバグ指摘・修正提案                     | `/code-review`（公式）     |
+| コーディング原則・命名・制御フローの設計相談     | `/coding-principles`       |
+| テスト戦略・テスト層構成・テストダブルの設計相談 | `/testing-principles`      |
+| アーキテクチャ選定・レイヤー設計・ADR作成        | `/architecting-principles` |
+| 要件定義・業務モデリング・スコープ設計           | `/planning-principles`     |
+
 ---
 
 ## エンジニアリング自論
