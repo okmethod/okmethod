@@ -25,16 +25,29 @@
 **ディレクトリ構成**:
 
 ```
-coding-principles/
-|-- README.md     : 開発者向けインデックス
-|-- SKILL.md      : エージェント向けカスタムスキル
-|-- manifest.json : エージェント向けメタデータ
-|-- assets/       : ナレッジ本体(共通)
-|  |-- 01-code.md
-|  |-- 02-logic.md
-|  |-- 03-system.md
-|  |-- cohesion-coupling-cheatsheet.md
-|  |-- naming-cheatsheet.md
+<principles>/   ← ディレクトリごと .claude/skills/ にコピーするだけで使える
+|-- README.md  : 開発者向けインデックス
+|-- SKILL.md   : エージェント向けカスタムスキル（/<principles> で発動）
+|-- assets/    : ナレッジ本体（SKILL.md から相対パスで参照）
+```
+
+**導入方法**:
+
+**方法 1: ローカルコピー（単体スキルを手動で使う）**
+
+```sh
+# 使いたいスキルディレクトリを .claude/skills/ にコピー
+cp -r docs/development-domains/<principles>/ /path/to/.claude/skills/
+```
+
+**方法 2: マーケットプレイス経由（このリポジトリごと登録）**
+
+```sh
+# マーケットプレイスとして登録
+claude plugin marketplace add git@github.com:okmethod/okmethod.git
+
+# スキルをインストール
+claude plugin install architecting-principles
 ```
 
 ---
