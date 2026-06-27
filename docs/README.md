@@ -47,7 +47,11 @@ cp -r docs/development-domains/<principles>/ /path/to/.claude/skills/
 claude plugin marketplace add git@github.com:okmethod/okmethod.git
 
 # スキルをインストール
-claude plugin install architecting-principles
+claude plugin install okmethod
+
+# 最新版プラグインを再取得
+claude plugin marketplace update
+claude plugin update okmethod@okmethod-marketplace
 ```
 
 ---

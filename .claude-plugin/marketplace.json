@@ -1,14 +1,14 @@
 {
-  "name": "okmethod-principles-marketplace",
-  "description": "okmethod の開発プロセス別スキル集（心得シリーズ）",
+  "name": "okmethod-marketplace",
+  "description": "okmethod スキル集",
   "owner": {
     "name": "okmethod",
     "email": "okmethod2020@gmail.com"
   },
   "plugins": [
     {
-      "name": "architecting-principles",
-      "description": "アーキテクチャ設計・レビュー・技術選定を支援するスキル。スタイル選定、技術選定、レイヤー設計、Clean Architecture、ADR作成、トレードオフ判断などの相談・レビューに使用する。",
+      "name": "okmethod",
+      "description": "開発プロセス別のナレッジ（心得シリーズ）をベースに、相談・レビューするスキル",
       "author": {
         "name": "okmethod",
         "email": "okmethod2020@gmail.com"
@@ -22,6 +22,7 @@
       },
       "strict": false,
       "skills": ["./architecting-principles"],
+      "tags": ["アーキテクチャ設計"],
       "homepage": "https://github.com/okmethod/okmethod"
     }
   ]
