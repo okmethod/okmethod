@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "okmethod",
-      "description": "開発プロセス別のナレッジ（心得シリーズ）をベースに、相談・レビューするスキル",
+      "description": "開発プロセス別のナレッジ（心得シリーズ）をベースに、相談・レビューを行うスキル集",
       "author": {
         "name": "okmethod",
         "email": "okmethod2020@gmail.com"
@@ -21,8 +21,8 @@
         "ref": "main"
       },
       "strict": false,
-      "skills": ["./planning-principles", "./architecting-principles", "./testing-principles"],
-      "tags": ["要件定義", "アーキテクチャ設計", "テスト設計"],
+      "skills": ["./planning-principles", "./architecting-principles", "./testing-principles", "./coding-principles"],
+      "tags": ["要件定義", "アーキテクチャ設計", "テスト設計", "コーディング"],
       "homepage": "https://github.com/okmethod/okmethod"
     }
   ]
