@@ -87,4 +87,3 @@
 - [O'Reilly Japan ソフトウェアアーキテクチャの基礎](https://www.oreilly.co.jp//books/9784873119823/)
 - [Refactoring.Guru — Design Patterns](https://refactoring.guru/design-patterns)
 - [ソフトウェアアーキテクトが知るべき 97 のこと](https://ソフトウェアアーキテクトが知るべき97のこと.com)
-- [アーキテクチャを設計するといふこと 2025 年版](https://www.docswell.com/s/tyonekubo/ZX63WR-architecting-2025)
