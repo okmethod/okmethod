@@ -21,8 +21,8 @@
         "ref": "main"
       },
       "strict": false,
-      "skills": ["./architecting-principles", "./testing-principles"],
-      "tags": ["アーキテクチャ設計", "テスト設計"],
+      "skills": ["./planning-principles", "./architecting-principles", "./testing-principles"],
+      "tags": ["要件定義", "アーキテクチャ設計", "テスト設計"],
       "homepage": "https://github.com/okmethod/okmethod"
     }
   ]

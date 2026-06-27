@@ -201,7 +201,7 @@
 
 **_技術者でないとイメージしづらい機能以外の要求を、計測可能な品質特性として定義する。_**
 
-**参考**: [非機能要求グレードまとめ](./non-functional-requirements-overiew.md)
+**参考**: [非機能要求グレードまとめ](./non-functional-requirements-overview.md)
 
 ### 技術用語でなくユースケースで品質レベルを引き出す
 
