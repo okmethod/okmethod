@@ -71,6 +71,7 @@ claude plugin update okmethod@okmethod-marketplace
 ## エンジニアリング自論
 
 - [弁証法的エンジニアリングのすすめ](./specialty-domains/dialectics-engineering.md)
+- [エンジニアとPMの二人三脚理論](./specialty-domains/pm-collaboration-theory.md)
 - [ITプロジェクト ラグビーチーム理論](./specialty-domains/rugby-team-theory.md)
 
 ---
