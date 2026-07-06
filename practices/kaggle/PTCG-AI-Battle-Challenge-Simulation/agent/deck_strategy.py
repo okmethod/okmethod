@@ -167,19 +167,10 @@ class MegaLucarioDeckStrategy:
 
     # --- 攻撃計画 ---
 
-    def update_attack_plan(self, obs: Observation, ctx: GameContext) -> None:
-        assert obs.current is not None
-        assert obs.select is not None
-        game_state = obs.current
-        select = obs.select
-
-        if select.context != SelectContext.MAIN:
-            return
-
-        own_index = ctx.own_index
-        own_state = game_state.players[own_index]
-        op_state = game_state.players[1 - own_index]
-
+    def _collect_action_flags(
+        self, obs: Observation, own_index: int, select
+    ) -> tuple[bool, bool, bool]:
+        """MAINコンテキストで可能な行動フラグを収集する。"""
         can_switch = False
         can_op_switch = False
         can_use_mega_brave = False
@@ -199,6 +190,67 @@ class MegaLucarioDeckStrategy:
             elif o.type == OptionType.ATTACK:
                 if o.attackId == Mega_Brave_Attack:
                     can_use_mega_brave = True
+        return can_switch, can_op_switch, can_use_mega_brave
+
+    def _can_makuhita_evolve(self, position: int, select) -> bool:
+        """指定位置のマクノシタが今ターン進化できるか判定する。"""
+        for o in select.option:
+            if o.type != OptionType.EVOLVE or o.inPlayIndex is None:
+                continue
+            index = o.inPlayIndex + (1 if o.inPlayArea == AreaType.BENCH else 0)
+            if index == position:
+                return True
+        return False
+
+    def _calc_damage(self, base_damage: int, op_pokemon: Pokemon) -> int:
+        """弱点・抵抗力を適用した実ダメージを返す。"""
+        data = card_table[op_pokemon.id]
+        if data.weakness == EnergyType.FIGHTING:
+            return base_damage * 2
+        if data.resistance == EnergyType.FIGHTING:
+            return base_damage - 30
+        return base_damage
+
+    def _score_attack_vs_target(
+        self,
+        damage: int,
+        base_score: int,
+        energy_count: int,
+        op_pokemon: Pokemon,
+        op_state,
+        attacker_pos: int,
+        target_pos: int,
+    ) -> int:
+        """攻撃者×対象の組み合わせスコアを返す。"""
+        score = self._pokemon_score(op_pokemon)
+        prize = prize_count(op_pokemon) if op_pokemon.hp <= damage else 0
+        if op_pokemon.hp > damage:
+            score = int(score * damage / op_pokemon.hp)
+        score += base_score
+        if len(op_state.prize) <= prize:
+            score = 50000
+        if attacker_pos == 0:
+            score += 220
+        if target_pos == 0:
+            score += 300
+        score += energy_count
+        return score
+
+    def update_attack_plan(self, obs: Observation, ctx: GameContext) -> None:
+        assert obs.current is not None
+        assert obs.select is not None
+        game_state = obs.current
+        select = obs.select
+
+        if select.context != SelectContext.MAIN:
+            return
+
+        own_index = ctx.own_index
+        own_state = game_state.players[own_index]
+        op_state = game_state.players[1 - own_index]
+        can_switch, can_op_switch, can_use_mega_brave = self._collect_action_flags(
+            obs, own_index, select
+        )
 
         if game_state.turn < 2:
             return
@@ -234,16 +286,7 @@ class MegaLucarioDeckStrategy:
                     energy_required = 3
                     base_damage = 210
                 elif own_pokemon.id == Makuhita:
-                    for o in select.option:
-                        if o.type == OptionType.EVOLVE:
-                            if o.inPlayIndex is None:
-                                continue
-                            index = o.inPlayIndex + (
-                                1 if o.inPlayArea == AreaType.BENCH else 0
-                            )
-                            if index == i:
-                                break
-                    else:
+                    if not self._can_makuhita_evolve(i, select):
                         break
                     base_score -= 100
                     energy_required = 3
@@ -278,24 +321,10 @@ class MegaLucarioDeckStrategy:
                         continue
                     if j != 0 and not can_op_switch:
                         break
-                    damage = base_damage
-                    data = card_table[op_pokemon.id]
-                    if data.weakness == EnergyType.FIGHTING:
-                        damage *= 2
-                    elif data.resistance == EnergyType.FIGHTING:
-                        damage -= 30
-                    score = self._pokemon_score(op_pokemon)
-                    prize = prize_count(op_pokemon) if op_pokemon.hp <= damage else 0
-                    if op_pokemon.hp > damage:
-                        score = int(score * damage / op_pokemon.hp)
-                    score += base_score
-                    if len(op_state.prize) <= prize:
-                        score = 50000
-                    if i == 0:
-                        score += 220
-                    if j == 0:
-                        score += 300
-                    score += energy_count
+                    damage = self._calc_damage(base_damage, op_pokemon)
+                    score = self._score_attack_vs_target(
+                        damage, base_score, energy_count, op_pokemon, op_state, i, j
+                    )
                     if best_score < score:
                         best_score = score
                         self._state.plan.attacker = i
