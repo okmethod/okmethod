@@ -205,7 +205,7 @@ class MegaLucarioDeckStrategy:
             elif o.type == OptionType.EVOLVE:
                 card = get_card(obs, AreaType.HAND, o.index, own_index)
                 if card is not None and card.id == self.Hariyama:
-                    can_op_switch = True
+                    can_op_switch = True  # 特性「どすこいキャッチャー」: 進化時に相手ベンチを呼び出せる
             elif o.type == OptionType.RETREAT:
                 can_switch = True
             elif o.type == OptionType.ATTACK:
