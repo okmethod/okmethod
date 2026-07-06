@@ -25,7 +25,7 @@ class MegaLucarioTurnState:
     """メガルカリオデッキのターン内スコープ状態"""
 
     plan: AttackPlan = field(default_factory=AttackPlan)
-    ability_used: bool = False
+    lunatone_ability_used: bool = False
 
 
 # カードID定数
@@ -357,7 +357,8 @@ class MegaLucarioDeckStrategy:
             elif card.id == Basic_Fighting_Energy:
                 score += (
                     30
-                    if not self._state.ability_used or not game_state.energyAttached
+                    if not self._state.lunatone_ability_used
+                    or not game_state.energyAttached
                     else -1
                 )
         elif context == SelectContext.ATTACH_FROM:
@@ -492,4 +493,4 @@ class MegaLucarioDeckStrategy:
             )
             assert card is not None
             if card.id == Lunatone:
-                self._state.ability_used = True
+                self._state.lunatone_ability_used = True
