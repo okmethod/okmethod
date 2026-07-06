@@ -19,7 +19,6 @@ kaggle/PTCG-AI-Battle-Challenge-Simulation/
 │   └── pyproject.toml   # uvプロジェクト設定
 ├── notebooks/           # 実験用ノートブック
 ├── JP_Card_Data.csv     # 日本語カードリスト
-├── build.sh             # submission.tar.gz 生成スクリプト
 └── README.md
 ```
 
@@ -35,11 +34,7 @@ uv run poe test
 # Lint / Format
 uv run poe lint
 uv run poe fix
-```
 
-## 提出方法
-
-```bash
-./build.sh
-# → submission.tar.gz を Kaggle にアップロード
+# 提出物ビルド → submission.tar.gz を Kaggle にアップロード
+uv run poe build
 ```
