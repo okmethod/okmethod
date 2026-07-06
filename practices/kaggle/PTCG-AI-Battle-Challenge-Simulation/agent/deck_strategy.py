@@ -29,38 +29,37 @@ class MegaLucarioTurnState:
     lunatone_ability_used: bool = False
 
 
-# カードID定数（自デッキ）
-Makuhita = 673
-Hariyama = 674
-Lunatone = 675
-Solrock = 676
-Riolu = 677
-Mega_Lucario_ex = 678
-Dusk_Ball = 1102
-Switch = 1123
-Premium_Power_Pro = 1141
-Fighting_Gong = 1142
-Poke_Pad = 1152
-Hero_Cape = 1159
-Boss_Orders = 1182
-Carmine = 1192
-Lillie_Determination = 1227
-Gravity_Mountain = 1252
-Lumiose_City = 1267
-Basic_Fighting_Energy = 6
-
-# カードID定数（スコアリング対象の相手ポケモン）
-Noctowl = 173
-Fan_Rotom = 174
-Archaludon_ex = 190
-Munkidori = 112
-Meowth_ex = 1071
-
-# ワザID定数
-Mega_Brave_Attack = 983
-
-
 class MegaLucarioDeckStrategy:
+    # カードID定数（自デッキ）
+    Makuhita = 673
+    Hariyama = 674
+    Lunatone = 675
+    Solrock = 676
+    Riolu = 677
+    Mega_Lucario_ex = 678
+    Dusk_Ball = 1102
+    Switch = 1123
+    Premium_Power_Pro = 1141
+    Fighting_Gong = 1142
+    Poke_Pad = 1152
+    Hero_Cape = 1159
+    Boss_Orders = 1182
+    Carmine = 1192
+    Lillie_Determination = 1227
+    Gravity_Mountain = 1252
+    Lumiose_City = 1267
+    Basic_Fighting_Energy = 6
+
+    # カードID定数（スコアリング対象の相手ポケモン）
+    Noctowl = 173
+    Fan_Rotom = 174
+    Archaludon_ex = 190
+    Munkidori = 112
+    Meowth_ex = 1071
+
+    # ワザID定数
+    Mega_Brave_Attack = 983
+
     OWN_DECK: list[int] = read_deck_csv()
 
     def __init__(self) -> None:
@@ -81,9 +80,14 @@ class MegaLucarioDeckStrategy:
         elif data.stage1:
             score += 130
         card_id = pokemon.id
-        if card_id in (Noctowl, Fan_Rotom, Archaludon_ex, Meowth_ex):
+        if card_id in (
+            self.Noctowl,
+            self.Fan_Rotom,
+            self.Archaludon_ex,
+            self.Meowth_ex,
+        ):
             score -= 200
-        if card_id == Munkidori and len(pokemon.energies) >= 1:
+        if card_id == self.Munkidori and len(pokemon.energies) >= 1:
             score += 300
         score += pokemon.hp
         return score
@@ -93,19 +97,19 @@ class MegaLucarioDeckStrategy:
         score = 8000
         if active:
             score += 10
-        if pokemon.id in (Makuhita, Hariyama):
-            if pokemon.id == Hariyama:
+        if pokemon.id in (self.Makuhita, self.Hariyama):
+            if pokemon.id == self.Hariyama:
                 score += 1
             if energy_count < 3:
                 score += 100
             if ctx.sub_attacker_ready:
                 score -= 50
-        elif pokemon.id == Lunatone:
+        elif pokemon.id == self.Lunatone:
             score -= 100
-        elif pokemon.id == Solrock:
+        elif pokemon.id == self.Solrock:
             score += 20 if energy_count < 1 else -100
-        elif pokemon.id in (Riolu, Mega_Lucario_ex):
-            if pokemon.id == Mega_Lucario_ex:
+        elif pokemon.id in (self.Riolu, self.Mega_Lucario_ex):
+            if pokemon.id == self.Mega_Lucario_ex:
                 score += 1
             if energy_count < 2:
                 score += 100
@@ -131,10 +135,10 @@ class MegaLucarioDeckStrategy:
             if card is None:
                 continue
             field_counts[card.id] += 1
-            if card.id in (Makuhita, Hariyama):
+            if card.id in (self.Makuhita, self.Hariyama):
                 if len(card.energies) >= 3:
                     sub_attacker_ready = True
-            elif card.id in (Riolu, Mega_Lucario_ex):
+            elif card.id in (self.Riolu, self.Mega_Lucario_ex):
                 if len(card.energies) >= 2:
                     main_attacker_ready = True
 
@@ -177,18 +181,18 @@ class MegaLucarioDeckStrategy:
         for o in select.option:
             if o.type == OptionType.PLAY:
                 card = get_card(obs, AreaType.HAND, o.index, own_index)
-                if card is not None and card.id == Switch:
+                if card is not None and card.id == self.Switch:
                     can_switch = True
-                elif card is not None and card.id == Boss_Orders:
+                elif card is not None and card.id == self.Boss_Orders:
                     can_op_switch = True
             elif o.type == OptionType.EVOLVE:
                 card = get_card(obs, AreaType.HAND, o.index, own_index)
-                if card is not None and card.id == Hariyama:
+                if card is not None and card.id == self.Hariyama:
                     can_op_switch = True
             elif o.type == OptionType.RETREAT:
                 can_switch = True
             elif o.type == OptionType.ATTACK:
-                if o.attackId == Mega_Brave_Attack:
+                if o.attackId == self.Mega_Brave_Attack:
                     can_use_mega_brave = True
         return can_switch, can_op_switch, can_use_mega_brave
 
@@ -268,12 +272,12 @@ class MegaLucarioDeckStrategy:
                 energy_required = 0
                 base_damage = 0
                 base_score = 0
-                if own_pokemon.id == Mega_Lucario_ex:
+                if own_pokemon.id == self.Mega_Lucario_ex:
                     if a == 0:
                         energy_required = 1
                         base_damage = 130
                         base_score += 60 * min(
-                            3, ctx.discard_counts[Basic_Fighting_Energy]
+                            3, ctx.discard_counts[self.Basic_Fighting_Energy]
                         )
                     else:
                         energy_required = 2
@@ -282,17 +286,17 @@ class MegaLucarioDeckStrategy:
                         base_score -= 500
                 elif a == 1:
                     break
-                elif own_pokemon.id == Hariyama:
+                elif own_pokemon.id == self.Hariyama:
                     energy_required = 3
                     base_damage = 210
-                elif own_pokemon.id == Makuhita:
+                elif own_pokemon.id == self.Makuhita:
                     if not self._can_makuhita_evolve(i, select):
                         break
                     base_score -= 100
                     energy_required = 3
                     base_damage = 210
-                elif own_pokemon.id == Solrock:
-                    if ctx.field_counts[Lunatone] >= 1:
+                elif own_pokemon.id == self.Solrock:
+                    if ctx.field_counts[self.Lunatone] >= 1:
                         energy_required = 1
                         base_damage = 70
 
@@ -305,7 +309,7 @@ class MegaLucarioDeckStrategy:
                     break
                 if energy_count < energy_required:
                     if (
-                        ctx.hand_counts[Basic_Fighting_Energy] >= 1
+                        ctx.hand_counts[self.Basic_Fighting_Energy] >= 1
                         and not game_state.energyAttached
                     ):
                         energy_count += 1
@@ -341,15 +345,15 @@ class MegaLucarioDeckStrategy:
             score = ec * 2
             if o.index == self._state.plan.attacker - 1:
                 score += 100
-            if card.id == Mega_Lucario_ex:
+            if card.id == self.Mega_Lucario_ex:
                 score += 8 if ctx.own_prize in (2, 3) else 20
-            elif card.id == Hariyama and ec >= 2:
+            elif card.id == self.Hariyama and ec >= 2:
                 score += 15
-            elif card.id == Makuhita and ec >= 2:
+            elif card.id == self.Makuhita and ec >= 2:
                 score += 10
-            elif card.id == Solrock:
+            elif card.id == self.Solrock:
                 score += 5
-            elif card.id == Riolu:
+            elif card.id == self.Riolu:
                 score += 4
             return score
         else:
@@ -359,11 +363,11 @@ class MegaLucarioDeckStrategy:
         self, card: Pokemon | Card, obs: Observation, ctx: GameContext
     ) -> int:
         assert obs.current is not None
-        if card.id == Solrock:
+        if card.id == self.Solrock:
             return 2 if obs.current.firstPlayer == ctx.own_index else 4
-        if card.id == Riolu:
+        if card.id == self.Riolu:
             return 3
-        if card.id == Makuhita:
+        if card.id == self.Makuhita:
             return 1
         return 0
 
@@ -372,20 +376,20 @@ class MegaLucarioDeckStrategy:
     ) -> int:
         assert obs.current is not None
         score = 200 - ctx.hand_counts[card.id] * 100
-        if card.id == Makuhita:
+        if card.id == self.Makuhita:
             score += 10 if ctx.field_counts[card.id] < 1 else -10
-        elif card.id == Hariyama:
-            score += 20 if ctx.field_counts[Makuhita] >= 1 else -20
-        elif card.id == Lunatone:
+        elif card.id == self.Hariyama:
+            score += 20 if ctx.field_counts[self.Makuhita] >= 1 else -20
+        elif card.id == self.Lunatone:
             score += 60 if ctx.field_counts[card.id] < 1 else -250
-        elif card.id == Solrock:
+        elif card.id == self.Solrock:
             score += 50 if ctx.field_counts[card.id] < 1 else -250
-        elif card.id == Riolu:
-            total = ctx.field_counts[card.id] + ctx.field_counts[Mega_Lucario_ex]
+        elif card.id == self.Riolu:
+            total = ctx.field_counts[card.id] + ctx.field_counts[self.Mega_Lucario_ex]
             score += -150 if total >= 2 else -3 if total >= 1 else 40
-        elif card.id == Mega_Lucario_ex:
-            score += 40 if ctx.field_counts[Riolu] >= 1 else -15
-        elif card.id == Basic_Fighting_Energy:
+        elif card.id == self.Mega_Lucario_ex:
+            score += 40 if ctx.field_counts[self.Riolu] >= 1 else -15
+        elif card.id == self.Basic_Fighting_Energy:
             score += (
                 30
                 if not self._state.lunatone_ability_used
@@ -418,20 +422,21 @@ class MegaLucarioDeckStrategy:
         data = card_table[card.id]
 
         if data.cardType == CardType.POKEMON:
-            if card.id in (Lunatone, Solrock):
+            if card.id in (self.Lunatone, self.Solrock):
                 return -1 if ctx.field_counts[card.id] >= 1 else 20000
-            if card.id == Riolu:
+            if card.id == self.Riolu:
                 return (
                     -1
-                    if ctx.field_counts[card.id] + ctx.field_counts[Mega_Lucario_ex]
+                    if ctx.field_counts[card.id]
+                    + ctx.field_counts[self.Mega_Lucario_ex]
                     >= 2
                     else 20000
                 )
             return 20000
 
-        if card.id == Switch:
+        if card.id == self.Switch:
             return 6000 if self._state.plan.attacker > 0 else -1
-        if card.id == Premium_Power_Pro:
+        if card.id == self.Premium_Power_Pro:
             assert obs.current is not None
             game_state = obs.current
             if game_state.supporterPlayed and self._state.plan.remain_hp <= 0:
@@ -439,20 +444,20 @@ class MegaLucarioDeckStrategy:
             if not ctx.can_attack:
                 if (
                     not game_state.supporterPlayed
-                    and ctx.hand_counts[Carmine] > 0
-                    and ctx.hand_counts[Lillie_Determination] == 0
+                    and ctx.hand_counts[self.Carmine] > 0
+                    and ctx.hand_counts[self.Lillie_Determination] == 0
                 ):
                     return 3050
                 return -1
             return 5000
-        if card.id == Boss_Orders:
+        if card.id == self.Boss_Orders:
             return 3200 if self._state.plan.target >= 1 else -1
-        if card.id == Carmine:
+        if card.id == self.Carmine:
             return 3000
-        if card.id == Lillie_Determination:
+        if card.id == self.Lillie_Determination:
             return 3100
-        if card.id == Gravity_Mountain:
-            return -1 if ctx.stadium_id == Gravity_Mountain else 10000
+        if card.id == self.Gravity_Mountain:
+            return -1 if ctx.stadium_id == self.Gravity_Mountain else 10000
         return 10000
 
     def _score_attach(self, obs: Observation, o, ctx: GameContext) -> int:
@@ -461,11 +466,11 @@ class MegaLucarioDeckStrategy:
         assert card is not None
         assert pokemon is not None
 
-        if card.id == Hero_Cape:
+        if card.id == self.Hero_Cape:
             score = 7000
-            if pokemon.id == Riolu:
+            if pokemon.id == self.Riolu:
                 score += 100
-            elif pokemon.id == Mega_Lucario_ex:
+            elif pokemon.id == self.Mega_Lucario_ex:
                 score += 200
             return score
 
@@ -485,7 +490,7 @@ class MegaLucarioDeckStrategy:
     def _score_evolve(self, obs: Observation, o, ctx: GameContext) -> int:
         pokemon = get_card(obs, o.inPlayArea, o.inPlayIndex, ctx.own_index)
         assert pokemon is not None
-        if pokemon.id == Makuhita and self._state.plan.target == 0:
+        if pokemon.id == self.Makuhita and self._state.plan.target == 0:
             return -1
         assert isinstance(pokemon, Pokemon)
         return 9000 + len(pokemon.energies)
@@ -493,11 +498,11 @@ class MegaLucarioDeckStrategy:
     def _score_ability(self, obs: Observation, o, ctx: GameContext) -> int:
         card = get_card(obs, o.area, o.index, ctx.own_index)
         assert card is not None
-        return 1 if card.id == Lumiose_City else 30000
+        return 1 if card.id == self.Lumiose_City else 30000
 
     def _score_attack(self, o) -> int:
         score = 1000
-        is_mega_brave = o.attackId == Mega_Brave_Attack
+        is_mega_brave = o.attackId == self.Mega_Brave_Attack
         score += 100 if (self._state.plan.attack_index == 1) == is_mega_brave else 0
         return score
 
@@ -537,5 +542,5 @@ class MegaLucarioDeckStrategy:
                 obs, top_option.area, top_option.index, obs.current.yourIndex
             )
             assert card is not None
-            if card.id == Lunatone:
+            if card.id == self.Lunatone:
                 self._state.lunatone_ability_used = True
