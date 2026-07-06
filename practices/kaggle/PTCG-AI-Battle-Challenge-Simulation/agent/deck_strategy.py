@@ -406,7 +406,7 @@ class MegaLucarioDeckStrategy:
         if card.id == Lillie_Determination:
             return 3100
         if card.id == Gravity_Mountain:
-            return -1 if ctx.stadium_id == 0 else 10000
+            return -1 if ctx.stadium_id == Gravity_Mountain else 10000
         return 10000
 
     def _score_attach(self, obs: Observation, o, ctx: GameContext) -> int:
