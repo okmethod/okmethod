@@ -28,7 +28,7 @@ class MegaLucarioTurnState:
     lunatone_ability_used: bool = False
 
 
-# カードID定数
+# カードID定数（自デッキ）
 Makuhita = 673
 Hariyama = 674
 Lunatone = 675
@@ -47,6 +47,13 @@ Lillie_Determination = 1227
 Gravity_Mountain = 1252
 Lumiose_City = 1267
 Basic_Fighting_Energy = 6
+
+# カードID定数（スコアリング対象の相手ポケモン）
+Noctowl = 173
+Fan_Rotom = 174
+Archaludon_ex = 190
+Munkidori = 112
+Meowth_ex = 1071
 
 # ワザID定数
 Mega_Brave_Attack = 983
@@ -73,14 +80,9 @@ class MegaLucarioDeckStrategy:
         elif data.stage1:
             score += 130
         card_id = pokemon.id
-        if card_id in (
-            173,
-            174,
-            190,
-            1071,
-        ):  # ヤミカラス・ファンロトム・アーマーガアex・ニャースex
+        if card_id in (Noctowl, Fan_Rotom, Archaludon_ex, Meowth_ex):
             score -= 200
-        if card_id == 112 and len(pokemon.energies) >= 1:  # ムンクドリ
+        if card_id == Munkidori and len(pokemon.energies) >= 1:
             score += 300
         score += pokemon.hp
         return score
