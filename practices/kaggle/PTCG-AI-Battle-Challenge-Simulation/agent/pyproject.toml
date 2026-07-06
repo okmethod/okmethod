@@ -1,0 +1,43 @@
+[project]
+name = "ptcg-ai-battle-agent"
+version = "0.1.0"
+description = "PTCG AI Battle Challenge Simulation Agent"
+readme = "README.md"
+requires-python = ">=3.13.2"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "mypy>=1.20.1",
+    "poethepoet>=0.44.0",
+    "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.15.11",
+]
+
+[tool.ruff]
+exclude = ["cg/"]
+
+[tool.mypy]
+exclude = ["^cg/"]
+
+[[tool.mypy.overrides]]
+module = "cg.*"
+ignore_errors = true
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.poe]
+executor = {type = "virtualenv", location = ".venv"}
+
+[tool.poe.tasks]
+ruff-format = "ruff format ."
+ruff-check = "ruff check ."
+ruff-fix = "ruff check . --fix"
+mypy = "mypy ."
+test = "pytest tests/"
+test-coverage = {shell = "pytest tests/ --cov=. --cov-branch --cov-report=term-missing --junitxml=pytest.xml | tee pytest-coverage.txt"}
+lint = ["ruff-format", "ruff-check", "mypy"]
+fix = ["ruff-format", "ruff-fix"]
