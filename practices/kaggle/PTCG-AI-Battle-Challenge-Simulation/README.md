@@ -9,13 +9,20 @@
 kaggle/PTCG-AI-Battle-Challenge-Simulation/
 ├── agent/
 │   ├── cg/              # Python向けゲームエンジンライブラリ（ポケモン社提供）
-│   ├── tests/           # pytestテスト
-│   ├── main.py          # エージェント本体（提出物）
-│   ├── utils.py         # ユーティリティ（提出物）
-│   ├── deck.csv         # デッキレシピ（読み込み用・提出物）
+│   │
+│   ├── models.py        # 共通モデル（提出物）
+│   ├── utils.py         # 共通ユーティリティ（提出物）
+│   ├── deck.py          # デッキ固有ロジック（提出物）
+│   ├── main.py          # エントリポイント（提出物）
+│   ├── deck.csv         # デッキレシピ（提出物）
+│   │
 │   ├── deck_recipe.md   # デッキレシピ（参照用）
 │   ├── deck_strategy.md # デッキ戦略メモ（参照用）
+│   │
+│   ├── tests/           # pytestテスト
+│   │
 │   └── pyproject.toml   # uvプロジェクト設定
+│
 ├── notebooks/           # 実験用ノートブック
 ├── JP_Card_Data.csv     # 日本語カードリスト
 └── README.md
