@@ -482,13 +482,12 @@ class MegaLucarioDeckStrategy:
             if game_state.supporterPlayed and self._state.plan.remain_hp <= 0:
                 return -1
             if not ctx.can_attack:
-                if (
+                can_discard_setup = (
                     not game_state.supporterPlayed
                     and ctx.hand_counts[self.Carmine] > 0
                     and ctx.hand_counts[self.Lillie_Determination] == 0
-                ):
-                    return 3050
-                return -1
+                )
+                return 3050 if can_discard_setup else -1
             return 5000
         if card.id == self.Boss_Orders:
             return 3200 if self._state.plan.target >= 1 else -1
