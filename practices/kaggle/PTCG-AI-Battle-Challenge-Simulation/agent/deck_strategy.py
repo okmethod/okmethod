@@ -256,6 +256,39 @@ class MegaLucarioDeckStrategy:
         score += energy_count
         return score
 
+    def _get_attack_configs(
+        self,
+        own_pokemon: Pokemon,
+        i: int,
+        ctx: GameContext,
+        select,
+        can_use_mega_brave: bool,
+    ) -> list[tuple[int, int, int]]:
+        """ポケモンが使用可能な攻撃設定を返す。
+
+        返り値のリスト添字が attackIndex。各要素は (energy_required, base_damage, base_score)。
+        空リストはこのポケモンで攻撃できないことを意味する。
+        """
+        if own_pokemon.id == self.Mega_Lucario_ex:
+            prize_adj = -500 if ctx.own_prize in (2, 3) else 0
+            a0_score = (
+                60 * min(3, ctx.discard_counts[self.Basic_Fighting_Energy]) + prize_adj
+            )
+            configs: list[tuple[int, int, int]] = [(1, 130, a0_score)]
+            mega_brave_blocked = (
+                i == 0 and len(own_pokemon.energies) >= 2 and not can_use_mega_brave
+            )
+            if not mega_brave_blocked:
+                configs.append((2, 270, prize_adj))
+            return configs
+        if own_pokemon.id == self.Hariyama:
+            return [(3, 210, 0)]
+        if own_pokemon.id == self.Makuhita:
+            return [(3, 210, -100)] if self._can_makuhita_evolve(i, select) else []
+        if own_pokemon.id == self.Solrock:
+            return [(1, 70, 0)] if ctx.field_counts[self.Lunatone] >= 1 else []
+        return []
+
     def update_attack_plan(self, obs: Observation, ctx: GameContext) -> None:
         """全攻撃者×全対象の組み合わせを総当たりして最善の攻撃計画を _state.plan に保存する。"""
         assert obs.current is not None
@@ -285,45 +318,14 @@ class MegaLucarioDeckStrategy:
                 continue
             if i != 0 and not can_switch:
                 break
-            for a in range(2):
-                energy_required = 0
-                base_damage = 0
-                base_score = 0
-                if own_pokemon.id == self.Mega_Lucario_ex:
-                    if a == 0:
-                        energy_required = 1
-                        base_damage = 130
-                        base_score += 60 * min(
-                            3, ctx.discard_counts[self.Basic_Fighting_Energy]
-                        )
-                    else:
-                        energy_required = 2
-                        base_damage = 270
-                    if ctx.own_prize in (2, 3):
-                        base_score -= 500
-                elif a == 1:
-                    break
-                elif own_pokemon.id == self.Hariyama:
-                    energy_required = 3
-                    base_damage = 210
-                elif own_pokemon.id == self.Makuhita:
-                    if not self._can_makuhita_evolve(i, select):
-                        break
-                    base_score -= 100
-                    energy_required = 3
-                    base_damage = 210
-                elif own_pokemon.id == self.Solrock:
-                    if ctx.field_counts[self.Lunatone] >= 1:
-                        energy_required = 1
-                        base_damage = 70
-
-                if base_damage <= 0:
-                    continue
-
+            attack_configs = self._get_attack_configs(
+                own_pokemon, i, ctx, select, can_use_mega_brave
+            )
+            for a, (energy_required, base_damage, base_score) in enumerate(
+                attack_configs
+            ):
                 needs_energy_attach = False
                 energy_count = len(own_pokemon.energies)
-                if a == 1 and i == 0 and energy_count >= 2 and not can_use_mega_brave:
-                    break
                 if energy_count < energy_required:
                     if (
                         ctx.hand_counts[self.Basic_Fighting_Energy] >= 1
