@@ -207,7 +207,7 @@ class MegaLucarioDeckStrategy:
         select: SelectData,
         can_use_mega_brave: bool,
     ) -> list[tuple[int, int, int]]:
-        """ポケモンが使用可能な攻撃設定を返す。
+        """§6 — ポケモンが使用可能な攻撃設定を返す。
 
         返り値のリスト添字が attackIndex。各要素は (energy_required, base_damage, base_score)。
         空リストはこのポケモンで攻撃できないことを意味する。
@@ -242,7 +242,7 @@ class MegaLucarioDeckStrategy:
         attacker_pos: int,
         target_pos: int,
     ) -> int:
-        """攻撃者×対象の組み合わせスコアを返す。"""
+        """§6 — 攻撃者×対象の組み合わせスコアを返す。"""
         score = self._score_pokemon(op_pokemon)
         prize = prize_count(op_pokemon) if op_pokemon.hp <= damage else 0
         if op_pokemon.hp > damage:
@@ -327,7 +327,7 @@ class MegaLucarioDeckStrategy:
     # --- スコアリング（OptionType 別） ---
 
     def _score_pokemon(self, pokemon: Pokemon) -> int:
-        """相手ポケモンの撃破優先度スコアを返す。
+        """§6 — 相手ポケモンの撃破優先度スコアを返す。
 
         サイド枚数・エネルギー・進化段階を基準に、特定カードを補正する。
         """
@@ -353,7 +353,7 @@ class MegaLucarioDeckStrategy:
         return score
 
     def _score_energy(self, pokemon: Pokemon, active: bool, ctx: GameContext) -> int:
-        """エネルギー手張り先ポケモンへのスコアを返す。
+        """§4 — エネルギー手張り先ポケモンへのスコアを返す。
 
         ポケモン種別ごとに必要枚数・アタッカー準備状況を参照して優先度を補正する。
         """
@@ -384,7 +384,7 @@ class MegaLucarioDeckStrategy:
     def _score_card_switch(
         self, o: Option, card: Pokemon | Card, ctx: GameContext
     ) -> int:
-        """SWITCH / TO_ACTIVE コンテキストでのカードスコア。
+        """§5 — SWITCH / TO_ACTIVE コンテキストでのカードスコア。
 
         自側は次ターンのアタッカー優先、相手側は攻撃目標と一致するかで点数を付ける。
         """
@@ -410,7 +410,7 @@ class MegaLucarioDeckStrategy:
     def _score_card_setup(
         self, card: Pokemon | Card, obs: Observation, ctx: GameContext
     ) -> int:
-        """SETUP_ACTIVE_POKEMON（ゲーム開始時バトル場配置）でのカードスコア。
+        """§2 — SETUP_ACTIVE_POKEMON（ゲーム開始時バトル場配置）でのカードスコア。
 
         先攻・後攻によってソルロックの優先度が変わる。
         """
@@ -426,7 +426,7 @@ class MegaLucarioDeckStrategy:
     def _score_card_to_hand(
         self, card: Pokemon | Card, obs: Observation, ctx: GameContext
     ) -> int:
-        """TO_HAND コンテキストでのカードスコア。
+        """§7 — TO_HAND コンテキストでのカードスコア。
 
         フィールド・手札の枚数を見て、過剰になるカードを低優先にする。
         """
@@ -522,7 +522,7 @@ class MegaLucarioDeckStrategy:
         return 10000
 
     def _score_attach(self, obs: Observation, o: Option, ctx: GameContext) -> int:
-        """ATTACH（ツール・エネルギーをポケモンに付ける）オプションのスコア。
+        """§4 — ATTACH（ツール・エネルギーをポケモンに付ける）オプションのスコア。
 
         攻撃計画の手張り必要フラグと照合してアタッカーへの付与を優遇する。
         """
@@ -555,7 +555,7 @@ class MegaLucarioDeckStrategy:
         return score
 
     def _score_evolve(self, obs: Observation, o: Option, ctx: GameContext) -> int:
-        """EVOLVE（進化）オプションのスコア。
+        """§3 — EVOLVE（進化）オプションのスコア。
 
         相手バトルポケモンをマクノシタで倒せる場面では進化を抑制する。
         """
@@ -578,7 +578,7 @@ class MegaLucarioDeckStrategy:
         return 1 if card.id == self.Lumiose_City else 30000
 
     def _score_attack(self, o: Option) -> int:
-        """ATTACK オプションのスコア。
+        """§7 — ATTACK オプションのスコア。
 
         攻撃計画で選んだワザインデックスと一致する場合に加点する。
         """
