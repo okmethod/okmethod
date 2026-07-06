@@ -130,6 +130,10 @@ class MegaLucarioDeckStrategy:
         for stadium_card in state.stadium:
             stadium_id = stadium_card.id
 
+        can_attack = obs.select is not None and any(
+            o.type == OptionType.ATTACK for o in obs.select.option
+        )
+
         return GameContext(
             own_index=own_index,
             own_prize=len(own_state.prize),
@@ -139,6 +143,7 @@ class MegaLucarioDeckStrategy:
             main_attacker_ready=main_attacker_ready,
             sub_attacker_ready=sub_attacker_ready,
             stadium_id=stadium_id,
+            can_attack=can_attack,
         )
 
     # --- 攻撃計画 ---
@@ -175,7 +180,6 @@ class MegaLucarioDeckStrategy:
             elif o.type == OptionType.RETREAT:
                 can_switch = True
             elif o.type == OptionType.ATTACK:
-                ctx.can_attack = True
                 if o.attackId == Mega_Brave_Attack:
                     can_use_mega_brave = True
 
