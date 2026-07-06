@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 
 from cg.api import (
     AreaType,
+    Card,
     CardType,
     EnergyType,
     Observation,
@@ -305,69 +306,82 @@ class MegaLucarioDeckStrategy:
 
     # --- スコアリング（OptionType 別） ---
 
+    def _score_card_switch(self, o, card: Pokemon | Card, ctx: GameContext) -> int:
+        ec = len(card.energies) if isinstance(card, Pokemon) else 0
+        if o.playerIndex == ctx.own_index:
+            score = ec * 2
+            if o.index == self._state.plan.attacker - 1:
+                score += 100
+            if card.id == Mega_Lucario_ex:
+                score += 8 if ctx.own_prize in (2, 3) else 20
+            elif card.id == Hariyama and ec >= 2:
+                score += 15
+            elif card.id == Makuhita and ec >= 2:
+                score += 10
+            elif card.id == Solrock:
+                score += 5
+            elif card.id == Riolu:
+                score += 4
+            return score
+        else:
+            return 100 if o.index == self._state.plan.target - 1 else 0
+
+    def _score_card_setup(
+        self, card: Pokemon | Card, obs: Observation, ctx: GameContext
+    ) -> int:
+        assert obs.current is not None
+        if card.id == Solrock:
+            return 2 if obs.current.firstPlayer == ctx.own_index else 4
+        if card.id == Riolu:
+            return 3
+        if card.id == Makuhita:
+            return 1
+        return 0
+
+    def _score_card_to_hand(
+        self, card: Pokemon | Card, obs: Observation, ctx: GameContext
+    ) -> int:
+        assert obs.current is not None
+        score = 200 - ctx.hand_counts[card.id] * 100
+        if card.id == Makuhita:
+            score += 10 if ctx.field_counts[card.id] < 1 else -10
+        elif card.id == Hariyama:
+            score += 20 if ctx.field_counts[Makuhita] >= 1 else -20
+        elif card.id == Lunatone:
+            score += 60 if ctx.field_counts[card.id] < 1 else -250
+        elif card.id == Solrock:
+            score += 50 if ctx.field_counts[card.id] < 1 else -250
+        elif card.id == Riolu:
+            total = ctx.field_counts[card.id] + ctx.field_counts[Mega_Lucario_ex]
+            score += -150 if total >= 2 else -3 if total >= 1 else 40
+        elif card.id == Mega_Lucario_ex:
+            score += 40 if ctx.field_counts[Riolu] >= 1 else -15
+        elif card.id == Basic_Fighting_Energy:
+            score += (
+                30
+                if not self._state.lunatone_ability_used
+                or not obs.current.energyAttached
+                else -1
+            )
+        return score
+
     def _score_card(self, obs: Observation, o, ctx: GameContext) -> int:
         card = get_card(obs, o.area, o.index, o.playerIndex)
         if card is None:
             return 0
-        assert obs.current is not None
         assert obs.select is not None
-        game_state = obs.current
-        context = obs.select.context
-        ec = len(card.energies) if isinstance(card, Pokemon) else 0
-        score = 0
-
-        if context in (SelectContext.SWITCH, SelectContext.TO_ACTIVE):
-            if o.playerIndex == ctx.own_index:
-                score += ec * 2
-                if o.index == self._state.plan.attacker - 1:
-                    score += 100
-                if card.id == Mega_Lucario_ex:
-                    score += 8 if ctx.own_prize in (2, 3) else 20
-                elif card.id == Hariyama and ec >= 2:
-                    score += 15
-                elif card.id == Makuhita and ec >= 2:
-                    score += 10
-                elif card.id == Solrock:
-                    score += 5
-                elif card.id == Riolu:
-                    score += 4
-            else:
-                if o.index == self._state.plan.target - 1:
-                    score += 100
-        elif context == SelectContext.SETUP_ACTIVE_POKEMON:
-            if card.id == Solrock:
-                score = 2 if game_state.firstPlayer == ctx.own_index else 4
-            elif card.id == Riolu:
-                score = 3
-            elif card.id == Makuhita:
-                score = 1
-        elif context == SelectContext.TO_HAND:
-            score = 200 - ctx.hand_counts[card.id] * 100
-            if card.id == Makuhita:
-                score += 10 if ctx.field_counts[card.id] < 1 else -10
-            elif card.id == Hariyama:
-                score += 20 if ctx.field_counts[Makuhita] >= 1 else -20
-            elif card.id == Lunatone:
-                score += 60 if ctx.field_counts[card.id] < 1 else -250
-            elif card.id == Solrock:
-                score += 50 if ctx.field_counts[card.id] < 1 else -250
-            elif card.id == Riolu:
-                total = ctx.field_counts[card.id] + ctx.field_counts[Mega_Lucario_ex]
-                score += -150 if total >= 2 else -3 if total >= 1 else 40
-            elif card.id == Mega_Lucario_ex:
-                score += 40 if ctx.field_counts[Riolu] >= 1 else -15
-            elif card.id == Basic_Fighting_Energy:
-                score += (
-                    30
-                    if not self._state.lunatone_ability_used
-                    or not game_state.energyAttached
-                    else -1
-                )
-        elif context == SelectContext.ATTACH_FROM:
-            assert isinstance(card, Pokemon)
-            score = self._energy_score(card, o.area == AreaType.ACTIVE, ctx)
-
-        return score
+        match obs.select.context:
+            case SelectContext.SWITCH | SelectContext.TO_ACTIVE:
+                return self._score_card_switch(o, card, ctx)
+            case SelectContext.SETUP_ACTIVE_POKEMON:
+                return self._score_card_setup(card, obs, ctx)
+            case SelectContext.TO_HAND:
+                return self._score_card_to_hand(card, obs, ctx)
+            case SelectContext.ATTACH_FROM:
+                assert isinstance(card, Pokemon)
+                return self._energy_score(card, o.area == AreaType.ACTIVE, ctx)
+            case _:
+                return 0
 
     def _score_play(self, obs: Observation, o, ctx: GameContext) -> int:
         card = get_card(obs, AreaType.HAND, o.index, ctx.own_index)
