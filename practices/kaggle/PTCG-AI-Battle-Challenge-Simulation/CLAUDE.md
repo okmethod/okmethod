@@ -16,6 +16,10 @@ uv run poe lint  # ruff + mypy
 uv run poe fix   # ruff 自動修正
 ```
 
+## モジュール設計
+
+`models / utils / main` をフレームワーク層、`deck_strategy / deck_recipe` をデッキ層として分離。デッキ固有の実装が `deck_strategy.py` と `deck_recipe.csv` に閉じるよう設計している。
+
 ## 技術仕様
 
 - `cg/`: ポケモン社提供のC++製TCGシミュレータ。編集不要。`api.py` に盤面データ構造とMCTS用APIが定義されている
@@ -27,6 +31,6 @@ uv run poe fix   # ruff 自動修正
 
 - `main.py` に `agent()` 関数が存在すること（エントリポイント固定）
 - `agent/` 直下のファイルを `tar -czf submission.tar.gz` でまとめて提出
-- 提出物に含めるファイル: `main.py` / `utils.py` / `deck.csv` / `cg/`
+- 提出物に含めるファイル: `main.py` / `utils.py` / `models.py` / `deck_strategy.py` / `deck_recipe.csv` / `cg/`
 - Kaggle実行環境はインターネット遮断（外部API・LLM呼び出し不可）
 - `md` / `pyproject.toml` / `tests/` は提出物に含めない（`poe build` が自動除外）

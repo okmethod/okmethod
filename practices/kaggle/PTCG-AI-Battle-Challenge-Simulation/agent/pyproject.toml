@@ -41,4 +41,4 @@ test = "pytest tests/"
 test-coverage = {shell = "pytest tests/ --cov=. --cov-branch --cov-report=term-missing --junitxml=pytest.xml | tee pytest-coverage.txt"}
 lint = ["ruff-format", "ruff-check", "mypy"]
 fix = ["ruff-format", "ruff-fix"]
-build = {shell = "tar -czf ../submission.tar.gz main.py models.py deck.py deck.csv utils.py cg/ && echo 'Created submission.tar.gz'"}
+build = {shell = "tar -czf ../submission.tar.gz main.py models.py deck_strategy.py deck_recipe.csv utils.py cg/ && echo 'Created submission.tar.gz'"}

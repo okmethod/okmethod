@@ -5,6 +5,7 @@
 
 from collections import defaultdict
 from dataclasses import dataclass, field
+from typing import Any, Protocol
 
 
 @dataclass
@@ -44,3 +45,17 @@ class AgentState:
     plan: AttackPlan = field(default_factory=AttackPlan)
     pre_turn: int = 0
     ability_used: bool = False
+
+
+class DeckStrategyProtocol(Protocol):
+    """デッキ実装が満たすべきインターフェース。
+
+    deck_strategy.py を別デッキに差し替える際はこのプロトコルを実装すること。
+    """
+
+    OWN_DECK: list[int]
+
+    def collect_context(self, obs: Any) -> GameContext: ...
+    def update_attack_plan(self, obs: Any, ctx: GameContext, state: AgentState) -> None: ...
+    def score_option(self, obs: Any, o: Any, ctx: GameContext, state: AgentState) -> int: ...
+    def post_pick(self, obs: Any, top_option: Any, state: AgentState) -> None: ...

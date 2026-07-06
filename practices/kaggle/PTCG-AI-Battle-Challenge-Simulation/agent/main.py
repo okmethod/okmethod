@@ -5,8 +5,11 @@
 
 from cg.api import Observation, SelectContext, to_observation_class
 
-import deck
-from models import AgentState, AttackPlan
+from deck_strategy import MegaLucarioDeckStrategy
+from models import AgentState, AttackPlan, DeckStrategyProtocol
+
+# グローバル変数: デッキ固有戦略の実装クラス
+_deck: DeckStrategyProtocol = MegaLucarioDeckStrategy()
 
 # グローバル変数: ターンをまたいで維持するセッション状態
 _state = AgentState()
@@ -22,7 +25,7 @@ def agent(obs_dict: dict) -> list[int]:
 
     # デッキ選択フェーズ: obs.select が None のときだけ呼ばれる
     if obs.select is None:
-        return deck.OWN_DECK
+        return _deck.OWN_DECK
 
     # 初期化フェーズ: ターンが変わったらターン内状態を初期化
     if _state.pre_turn != obs.current.turn:
@@ -31,9 +34,9 @@ def agent(obs_dict: dict) -> list[int]:
         _state.ability_used = False
 
     # 評価フェーズ: コンテキスト収集・攻撃計画立案・スコアリング（デッキ固有）
-    ctx = deck.collect_context(obs)
-    deck.update_attack_plan(obs, ctx, _state)
-    scores = [deck.score_option(obs, o, ctx, _state) for o in obs.select.option]
+    ctx = _deck.collect_context(obs)
+    _deck.update_attack_plan(obs, ctx, _state)
+    scores = [_deck.score_option(obs, o, ctx, _state) for o in obs.select.option]
 
     # 行動選択フェーズ: スコア降順で上位 maxCount 件を返す
     select = obs.select
@@ -41,5 +44,5 @@ def agent(obs_dict: dict) -> list[int]:
         i for i, _ in sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
     ]
     if select.context == SelectContext.MAIN:
-        deck.post_pick(obs, select.option[desc_indices[0]], _state)
+        _deck.post_pick(obs, select.option[desc_indices[0]], _state)
     return desc_indices[: select.maxCount]

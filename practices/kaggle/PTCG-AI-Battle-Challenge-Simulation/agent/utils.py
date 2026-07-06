@@ -22,7 +22,7 @@ def read_deck_csv() -> list[int]:
     Returns:
         list[int]: デッキに含まれるカードIDのリスト（60枚）。
     """
-    file_path = "deck.csv"
+    file_path = "deck_recipe.csv"
     if not os.path.exists(file_path):
         file_path = "/kaggle_simulations/agent/" + file_path
     with open(file_path, "r") as file:
