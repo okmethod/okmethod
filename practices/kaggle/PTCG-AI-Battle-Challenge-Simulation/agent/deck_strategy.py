@@ -30,6 +30,12 @@ class MegaLucarioTurnState:
 
 
 class MegaLucarioDeckStrategy:
+    """メガルカリオexデッキの戦略実装。
+
+    DeckStrategyProtocol を満たす具象クラス。
+    デッキ固有のカードID定数・スコアリングロジックをここに閉じ込める。
+    """
+
     # カードID定数（自デッキ）
     Makuhita = 673
     Hariyama = 674
@@ -66,11 +72,16 @@ class MegaLucarioDeckStrategy:
         self._state = MegaLucarioTurnState()
 
     def reset_turn(self) -> None:
+        """ターン開始時にターン内スコープの状態をリセットする。"""
         self._state = MegaLucarioTurnState()
 
     # --- ポケモン評価 ---
 
     def _pokemon_score(self, pokemon: Pokemon) -> int:
+        """相手ポケモンの撃破優先度スコアを返す。
+
+        サイド枚数・エネルギー・進化段階を基準に、特定カードを補正する。
+        """
         data = card_table[pokemon.id]
         score = prize_count(pokemon) * 1000
         score += len(pokemon.energies) * 150
@@ -93,6 +104,10 @@ class MegaLucarioDeckStrategy:
         return score
 
     def _energy_score(self, pokemon: Pokemon, active: bool, ctx: GameContext) -> int:
+        """エネルギー手張り先ポケモンへのスコアを返す。
+
+        ポケモン種別ごとに必要枚数・アタッカー準備状況を参照して優先度を補正する。
+        """
         energy_count = len(pokemon.energies)
         score = 8000
         if active:
@@ -120,6 +135,7 @@ class MegaLucarioDeckStrategy:
     # --- コンテキスト収集 ---
 
     def collect_context(self, obs: Observation) -> GameContext:
+        """agent() 1回分の盤面スナップショットを収集して GameContext を返す。"""
         assert obs.current is not None
         game_state = obs.current
         own_index = game_state.yourIndex
@@ -241,6 +257,7 @@ class MegaLucarioDeckStrategy:
         return score
 
     def update_attack_plan(self, obs: Observation, ctx: GameContext) -> None:
+        """全攻撃者×全対象の組み合わせを総当たりして最善の攻撃計画を _state.plan に保存する。"""
         assert obs.current is not None
         assert obs.select is not None
         game_state = obs.current
@@ -340,6 +357,10 @@ class MegaLucarioDeckStrategy:
     # --- スコアリング（OptionType 別） ---
 
     def _score_card_switch(self, o, card: Pokemon | Card, ctx: GameContext) -> int:
+        """SWITCH / TO_ACTIVE コンテキストでのカードスコア。
+
+        自側は次ターンのアタッカー優先、相手側は攻撃目標と一致するかで点数を付ける。
+        """
         ec = len(card.energies) if isinstance(card, Pokemon) else 0
         if o.playerIndex == ctx.own_index:
             score = ec * 2
@@ -362,6 +383,10 @@ class MegaLucarioDeckStrategy:
     def _score_card_setup(
         self, card: Pokemon | Card, obs: Observation, ctx: GameContext
     ) -> int:
+        """SETUP_ACTIVE_POKEMON（ゲーム開始時バトル場配置）でのカードスコア。
+
+        先攻・後攻によってソルロックの優先度が変わる。
+        """
         assert obs.current is not None
         if card.id == self.Solrock:
             return 2 if obs.current.firstPlayer == ctx.own_index else 4
@@ -374,6 +399,10 @@ class MegaLucarioDeckStrategy:
     def _score_card_to_hand(
         self, card: Pokemon | Card, obs: Observation, ctx: GameContext
     ) -> int:
+        """TO_HAND コンテキストでのカードスコア。
+
+        フィールド・手札の枚数を見て、過剰になるカードを低優先にする。
+        """
         assert obs.current is not None
         score = 200 - ctx.hand_counts[card.id] * 100
         if card.id == self.Makuhita:
@@ -399,6 +428,7 @@ class MegaLucarioDeckStrategy:
         return score
 
     def _score_card(self, obs: Observation, o, ctx: GameContext) -> int:
+        """CARD オプションを SelectContext に応じたサブ関数へディスパッチする。"""
         card = get_card(obs, o.area, o.index, o.playerIndex)
         if card is None:
             return 0
@@ -417,6 +447,10 @@ class MegaLucarioDeckStrategy:
                 return 0
 
     def _score_play(self, obs: Observation, o, ctx: GameContext) -> int:
+        """PLAY（手札からカードを場に出す）オプションのスコア。
+
+        カード種別・攻撃計画・サポーター使用済みフラグを参照して優先度を返す。
+        """
         card = get_card(obs, AreaType.HAND, o.index, ctx.own_index)
         assert card is not None
         data = card_table[card.id]
@@ -461,6 +495,10 @@ class MegaLucarioDeckStrategy:
         return 10000
 
     def _score_attach(self, obs: Observation, o, ctx: GameContext) -> int:
+        """ATTACH（ツール・エネルギーをポケモンに付ける）オプションのスコア。
+
+        攻撃計画の手張り必要フラグと照合してアタッカーへの付与を優遇する。
+        """
         card = get_card(obs, AreaType.HAND, o.index, ctx.own_index)
         pokemon = get_card(obs, o.inPlayArea, o.inPlayIndex, ctx.own_index)
         assert card is not None
@@ -488,6 +526,10 @@ class MegaLucarioDeckStrategy:
         return score
 
     def _score_evolve(self, obs: Observation, o, ctx: GameContext) -> int:
+        """EVOLVE（進化）オプションのスコア。
+
+        相手バトルポケモンをマクノシタで倒せる場面では進化を抑制する。
+        """
         pokemon = get_card(obs, o.inPlayArea, o.inPlayIndex, ctx.own_index)
         assert pokemon is not None
         if pokemon.id == self.Makuhita and self._state.plan.target == 0:
@@ -496,11 +538,19 @@ class MegaLucarioDeckStrategy:
         return 9000 + len(pokemon.energies)
 
     def _score_ability(self, obs: Observation, o, ctx: GameContext) -> int:
+        """ABILITY（特性）オプションのスコア。
+
+        ルミオスシティジムは手張りの代替手段なので低優先にする。
+        """
         card = get_card(obs, o.area, o.index, ctx.own_index)
         assert card is not None
         return 1 if card.id == self.Lumiose_City else 30000
 
     def _score_attack(self, o) -> int:
+        """ATTACK オプションのスコア。
+
+        攻撃計画で選んだワザインデックスと一致する場合に加点する。
+        """
         score = 1000
         is_mega_brave = o.attackId == self.Mega_Brave_Attack
         score += 100 if (self._state.plan.attack_index == 1) == is_mega_brave else 0
