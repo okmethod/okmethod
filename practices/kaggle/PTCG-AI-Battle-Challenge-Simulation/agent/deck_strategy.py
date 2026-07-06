@@ -53,7 +53,12 @@ class MegaLucarioDeckStrategy:
         elif data.stage1:
             score += 130
         card_id = pokemon.id
-        if card_id in (173, 174, 190, 1071):  # ヤミカラス・ファンロトム・アーマーガアex・ニャースex
+        if card_id in (
+            173,
+            174,
+            190,
+            1071,
+        ):  # ヤミカラス・ファンロトム・アーマーガアex・ニャースex
             score -= 200
         if card_id == 112 and len(pokemon.energies) >= 1:  # ムンクドリ
             score += 300
@@ -88,6 +93,7 @@ class MegaLucarioDeckStrategy:
     # --- コンテキスト収集 ---
 
     def collect_context(self, obs: Observation) -> GameContext:
+        assert obs.current is not None
         state = obs.current
         own_index = state.yourIndex
         own_state = state.players[own_index]
@@ -109,15 +115,16 @@ class MegaLucarioDeckStrategy:
                 if len(card.energies) >= 2:
                     main_attacker_ready = True
 
-        for card in own_state.hand:
-            hand_counts[card.id] += 1
+        assert own_state.hand is not None
+        for hand_card in own_state.hand:
+            hand_counts[hand_card.id] += 1
 
-        for card in own_state.discard:
-            discard_counts[card.id] += 1
+        for discard_card in own_state.discard:
+            discard_counts[discard_card.id] += 1
 
         stadium_id = 0
-        for card in state.stadium:
-            stadium_id = card.id
+        for stadium_card in state.stadium:
+            stadium_id = stadium_card.id
 
         return GameContext(
             own_index=own_index,
@@ -132,7 +139,11 @@ class MegaLucarioDeckStrategy:
 
     # --- 攻撃計画 ---
 
-    def update_attack_plan(self, obs: Observation, ctx: GameContext, state: AgentState) -> None:
+    def update_attack_plan(
+        self, obs: Observation, ctx: GameContext, state: AgentState
+    ) -> None:
+        assert obs.current is not None
+        assert obs.select is not None
         game_state = obs.current
         select = obs.select
 
@@ -149,13 +160,13 @@ class MegaLucarioDeckStrategy:
         for o in select.option:
             if o.type == OptionType.PLAY:
                 card = get_card(obs, AreaType.HAND, o.index, own_index)
-                if card.id == Switch:
+                if card is not None and card.id == Switch:
                     can_switch = True
-                elif card.id == Boss_Orders:
+                elif card is not None and card.id == Boss_Orders:
                     can_op_switch = True
             elif o.type == OptionType.EVOLVE:
                 card = get_card(obs, AreaType.HAND, o.index, own_index)
-                if card.id == Hariyama:
+                if card is not None and card.id == Hariyama:
                     can_op_switch = True
             elif o.type == OptionType.RETREAT:
                 can_switch = True
@@ -172,6 +183,8 @@ class MegaLucarioDeckStrategy:
         best_score = -1
 
         for i, own_pokemon in enumerate(own_cards):
+            if own_pokemon is None:
+                continue
             if i != 0 and not can_switch:
                 break
             for a in range(2):
@@ -182,7 +195,9 @@ class MegaLucarioDeckStrategy:
                     if a == 0:
                         energy_required = 1
                         base_damage = 130
-                        base_score += 60 * min(3, ctx.discard_counts[Basic_Fighting_Energy])
+                        base_score += 60 * min(
+                            3, ctx.discard_counts[Basic_Fighting_Energy]
+                        )
                     else:
                         energy_required = 2
                         base_damage = 270
@@ -196,7 +211,11 @@ class MegaLucarioDeckStrategy:
                 elif own_pokemon.id == Makuhita:
                     for o in select.option:
                         if o.type == OptionType.EVOLVE:
-                            index = o.inPlayIndex + (1 if o.inPlayArea == AreaType.BENCH else 0)
+                            if o.inPlayIndex is None:
+                                continue
+                            index = o.inPlayIndex + (
+                                1 if o.inPlayArea == AreaType.BENCH else 0
+                            )
                             if index == i:
                                 break
                     else:
@@ -217,7 +236,10 @@ class MegaLucarioDeckStrategy:
                 if a == 1 and i == 0 and energy_count >= 2 and not can_use_mega_brave:
                     break
                 if energy_count < energy_required:
-                    if ctx.hand_counts[Basic_Fighting_Energy] >= 1 and not game_state.energyAttached:
+                    if (
+                        ctx.hand_counts[Basic_Fighting_Energy] >= 1
+                        and not game_state.energyAttached
+                    ):
                         energy_count += 1
                         if energy_count < energy_required:
                             continue
@@ -227,6 +249,8 @@ class MegaLucarioDeckStrategy:
                         continue
 
                 for j, op_pokemon in enumerate(op_cards):
+                    if op_pokemon is None:
+                        continue
                     if j != 0 and not can_op_switch:
                         break
                     damage = base_damage
@@ -257,10 +281,14 @@ class MegaLucarioDeckStrategy:
 
     # --- スコアリング（OptionType 別） ---
 
-    def _score_card(self, obs: Observation, o, ctx: GameContext, state: AgentState) -> int:
+    def _score_card(
+        self, obs: Observation, o, ctx: GameContext, state: AgentState
+    ) -> int:
         card = get_card(obs, o.area, o.index, o.playerIndex)
         if card is None:
             return 0
+        assert obs.current is not None
+        assert obs.select is not None
         game_state = obs.current
         context = obs.select.context
         ec = len(card.energies) if isinstance(card, Pokemon) else 0
@@ -307,26 +335,40 @@ class MegaLucarioDeckStrategy:
             elif card.id == Mega_Lucario_ex:
                 score += 40 if ctx.field_counts[Riolu] >= 1 else -15
             elif card.id == Basic_Fighting_Energy:
-                score += 30 if not state.ability_used or not game_state.energyAttached else -1
+                score += (
+                    30
+                    if not state.ability_used or not game_state.energyAttached
+                    else -1
+                )
         elif context == SelectContext.ATTACH_FROM:
+            assert isinstance(card, Pokemon)
             score = self._energy_score(card, o.area == AreaType.ACTIVE, ctx)
 
         return score
 
-    def _score_play(self, obs: Observation, o, ctx: GameContext, state: AgentState) -> int:
+    def _score_play(
+        self, obs: Observation, o, ctx: GameContext, state: AgentState
+    ) -> int:
         card = get_card(obs, AreaType.HAND, o.index, ctx.own_index)
+        assert card is not None
         data = card_table[card.id]
 
         if data.cardType == CardType.POKEMON:
             if card.id in (Lunatone, Solrock):
                 return -1 if ctx.field_counts[card.id] >= 1 else 20000
             if card.id == Riolu:
-                return -1 if ctx.field_counts[card.id] + ctx.field_counts[Mega_Lucario_ex] >= 2 else 20000
+                return (
+                    -1
+                    if ctx.field_counts[card.id] + ctx.field_counts[Mega_Lucario_ex]
+                    >= 2
+                    else 20000
+                )
             return 20000
 
         if card.id == Switch:
             return 6000 if state.plan.attacker > 0 else -1
         if card.id == Premium_Power_Pro:
+            assert obs.current is not None
             game_state = obs.current
             if game_state.supporterPlayed and state.plan.remain_hp <= 0:
                 return -1
@@ -349,9 +391,13 @@ class MegaLucarioDeckStrategy:
             return -1 if ctx.stadium_id == 0 else 10000
         return 10000
 
-    def _score_attach(self, obs: Observation, o, ctx: GameContext, state: AgentState) -> int:
+    def _score_attach(
+        self, obs: Observation, o, ctx: GameContext, state: AgentState
+    ) -> int:
         card = get_card(obs, AreaType.HAND, o.index, ctx.own_index)
         pokemon = get_card(obs, o.inPlayArea, o.inPlayIndex, ctx.own_index)
+        assert card is not None
+        assert pokemon is not None
 
         if card.id == Hero_Cape:
             score = 7000
@@ -361,23 +407,32 @@ class MegaLucarioDeckStrategy:
                 score += 200
             return score
 
+        assert isinstance(pokemon, Pokemon)
         score = self._energy_score(pokemon, o.inPlayArea == AreaType.ACTIVE, ctx)
         if o.inPlayArea == AreaType.ACTIVE:
             if state.plan.attacker == 0 and state.plan.needs_energy_attach:
                 score += 200
         else:
-            if state.plan.attacker == 1 + o.inPlayIndex and state.plan.needs_energy_attach:
+            if (
+                state.plan.attacker == 1 + o.inPlayIndex
+                and state.plan.needs_energy_attach
+            ):
                 score += 200
         return score
 
-    def _score_evolve(self, obs: Observation, o, ctx: GameContext, state: AgentState) -> int:
+    def _score_evolve(
+        self, obs: Observation, o, ctx: GameContext, state: AgentState
+    ) -> int:
         pokemon = get_card(obs, o.inPlayArea, o.inPlayIndex, ctx.own_index)
+        assert pokemon is not None
         if pokemon.id == Makuhita and state.plan.target == 0:
             return -1
+        assert isinstance(pokemon, Pokemon)
         return 9000 + len(pokemon.energies)
 
     def _score_ability(self, obs: Observation, o, ctx: GameContext) -> int:
         card = get_card(obs, o.area, o.index, ctx.own_index)
+        assert card is not None
         return 1 if card.id == 1267 else 30000  # 1267: ルミオスシティ
 
     def _score_attack(self, o, state: AgentState) -> int:
@@ -386,7 +441,9 @@ class MegaLucarioDeckStrategy:
         score += 100 if (state.plan.attack_index == 1) == is_mega_brave else 0
         return score
 
-    def score_option(self, obs: Observation, o, ctx: GameContext, state: AgentState) -> int:
+    def score_option(
+        self, obs: Observation, o, ctx: GameContext, state: AgentState
+    ) -> int:
         """OptionType に応じてスコア関数をディスパッチする。"""
         match o.type:
             case OptionType.NUMBER:
@@ -413,6 +470,10 @@ class MegaLucarioDeckStrategy:
     def post_pick(self, obs: Observation, top_option, state: AgentState) -> None:
         """MAINコンテキストでのアクション選択後に状態を更新する。"""
         if top_option.type == OptionType.ABILITY:
-            card = get_card(obs, top_option.area, top_option.index, obs.current.yourIndex)
+            assert obs.current is not None
+            card = get_card(
+                obs, top_option.area, top_option.index, obs.current.yourIndex
+            )
+            assert card is not None
             if card.id == Lunatone:
                 state.ability_used = True

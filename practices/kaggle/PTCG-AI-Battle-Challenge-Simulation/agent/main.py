@@ -28,6 +28,7 @@ def agent(obs_dict: dict) -> list[int]:
         return _deck.OWN_DECK
 
     # 初期化フェーズ: ターンが変わったらターン内状態を初期化
+    assert obs.current is not None
     if _state.pre_turn != obs.current.turn:
         _state.pre_turn = obs.current.turn
         _state.plan = AttackPlan()

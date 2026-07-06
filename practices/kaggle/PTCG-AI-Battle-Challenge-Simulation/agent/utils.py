@@ -31,7 +31,7 @@ def read_deck_csv() -> list[int]:
 
 
 def get_card(
-    obs: Observation, area: AreaType, index: int, player_index: int
+    obs: Observation, area: AreaType, index: int | None, player_index: int
 ) -> Pokemon | Card | None:
     """指定ゾーンからカードまたはポケモンを取得する。
 
@@ -43,11 +43,16 @@ def get_card(
     Returns:
         Pokemon | Card | None: 該当するカード（対応するゾーンがない場合は None）
     """
+    if index is None:
+        return None
+    assert obs.current is not None
     ps = obs.current.players[player_index]
     match area:
         case AreaType.DECK:
+            assert obs.select is not None and obs.select.deck is not None
             return obs.select.deck[index]
         case AreaType.HAND:
+            assert ps.hand is not None
             return ps.hand[index]
         case AreaType.DISCARD:
             return ps.discard[index]
@@ -58,8 +63,10 @@ def get_card(
         case AreaType.PRIZE:
             return ps.prize[index]
         case AreaType.STADIUM:
+            assert obs.current.stadium is not None
             return obs.current.stadium[index]
         case AreaType.LOOKING:
+            assert obs.current.looking is not None
             return obs.current.looking[index]
         case _:
             return None
