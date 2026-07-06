@@ -18,7 +18,7 @@ from cg.api import (
 from models import AgentState, GameContext
 from utils import card_table, get_card, prize_count, read_deck_csv
 
-# --- カードID定数 ---
+# カードID定数
 Makuhita = 673
 Hariyama = 674
 Lunatone = 675
@@ -35,7 +35,11 @@ Boss_Orders = 1182
 Carmine = 1192
 Lillie_Determination = 1227
 Gravity_Mountain = 1252
+Lumiose_City = 1267
 Basic_Fighting_Energy = 6
+
+# ワザID定数
+Mega_Brave_Attack = 983
 
 
 class MegaLucarioDeckStrategy:
@@ -172,7 +176,7 @@ class MegaLucarioDeckStrategy:
                 can_switch = True
             elif o.type == OptionType.ATTACK:
                 ctx.can_attack = True
-                if o.attackId == 983:  # メガブレイブ
+                if o.attackId == Mega_Brave_Attack:
                     can_use_mega_brave = True
 
         if game_state.turn < 2:
@@ -433,11 +437,11 @@ class MegaLucarioDeckStrategy:
     def _score_ability(self, obs: Observation, o, ctx: GameContext) -> int:
         card = get_card(obs, o.area, o.index, ctx.own_index)
         assert card is not None
-        return 1 if card.id == 1267 else 30000  # 1267: ルミオスシティ
+        return 1 if card.id == Lumiose_City else 30000
 
     def _score_attack(self, o, state: AgentState) -> int:
         score = 1000
-        is_mega_brave = o.attackId == 983  # メガブレイブ
+        is_mega_brave = o.attackId == Mega_Brave_Attack
         score += 100 if (state.plan.attack_index == 1) == is_mega_brave else 0
         return score
 
