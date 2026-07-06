@@ -12,9 +12,11 @@ from cg.api import (
     CardType,
     EnergyType,
     Observation,
+    Option,
     OptionType,
     Pokemon,
     SelectContext,
+    SelectData,
 )
 
 from models import AttackPlan, GameContext
@@ -188,7 +190,7 @@ class MegaLucarioDeckStrategy:
     # --- 攻撃計画 ---
 
     def _collect_action_flags(
-        self, obs: Observation, own_index: int, select
+        self, obs: Observation, own_index: int, select: SelectData
     ) -> tuple[bool, bool, bool]:
         """MAINコンテキストで可能な行動フラグを収集する。"""
         can_switch = False
@@ -212,7 +214,7 @@ class MegaLucarioDeckStrategy:
                     can_use_mega_brave = True
         return can_switch, can_op_switch, can_use_mega_brave
 
-    def _can_makuhita_evolve(self, position: int, select) -> bool:
+    def _can_makuhita_evolve(self, position: int, select: SelectData) -> bool:
         """指定位置のマクノシタが今ターン進化できるか判定する。"""
         for o in select.option:
             if o.type != OptionType.EVOLVE or o.inPlayIndex is None:
@@ -261,7 +263,7 @@ class MegaLucarioDeckStrategy:
         own_pokemon: Pokemon,
         i: int,
         ctx: GameContext,
-        select,
+        select: SelectData,
         can_use_mega_brave: bool,
     ) -> list[tuple[int, int, int]]:
         """ポケモンが使用可能な攻撃設定を返す。
@@ -358,7 +360,9 @@ class MegaLucarioDeckStrategy:
 
     # --- スコアリング（OptionType 別） ---
 
-    def _score_card_switch(self, o, card: Pokemon | Card, ctx: GameContext) -> int:
+    def _score_card_switch(
+        self, o: Option, card: Pokemon | Card, ctx: GameContext
+    ) -> int:
         """SWITCH / TO_ACTIVE コンテキストでのカードスコア。
 
         自側は次ターンのアタッカー優先、相手側は攻撃目標と一致するかで点数を付ける。
@@ -429,8 +433,9 @@ class MegaLucarioDeckStrategy:
             )
         return score
 
-    def _score_card(self, obs: Observation, o, ctx: GameContext) -> int:
+    def _score_card(self, obs: Observation, o: Option, ctx: GameContext) -> int:
         """CARD オプションを SelectContext に応じたサブ関数へディスパッチする。"""
+        assert o.area is not None and o.playerIndex is not None
         card = get_card(obs, o.area, o.index, o.playerIndex)
         if card is None:
             return 0
@@ -448,7 +453,7 @@ class MegaLucarioDeckStrategy:
             case _:
                 return 0
 
-    def _score_play(self, obs: Observation, o, ctx: GameContext) -> int:
+    def _score_play(self, obs: Observation, o: Option, ctx: GameContext) -> int:
         """PLAY（手札からカードを場に出す）オプションのスコア。
 
         カード種別・攻撃計画・サポーター使用済みフラグを参照して優先度を返す。
@@ -496,11 +501,12 @@ class MegaLucarioDeckStrategy:
             return -1 if ctx.stadium_id == self.Gravity_Mountain else 10000
         return 10000
 
-    def _score_attach(self, obs: Observation, o, ctx: GameContext) -> int:
+    def _score_attach(self, obs: Observation, o: Option, ctx: GameContext) -> int:
         """ATTACH（ツール・エネルギーをポケモンに付ける）オプションのスコア。
 
         攻撃計画の手張り必要フラグと照合してアタッカーへの付与を優遇する。
         """
+        assert o.inPlayArea is not None
         card = get_card(obs, AreaType.HAND, o.index, ctx.own_index)
         pokemon = get_card(obs, o.inPlayArea, o.inPlayIndex, ctx.own_index)
         assert card is not None
@@ -520,6 +526,7 @@ class MegaLucarioDeckStrategy:
             if self._state.plan.attacker == 0 and self._state.plan.needs_energy_attach:
                 score += 200
         else:
+            assert o.inPlayIndex is not None
             if (
                 self._state.plan.attacker == 1 + o.inPlayIndex
                 and self._state.plan.needs_energy_attach
@@ -527,11 +534,12 @@ class MegaLucarioDeckStrategy:
                 score += 200
         return score
 
-    def _score_evolve(self, obs: Observation, o, ctx: GameContext) -> int:
+    def _score_evolve(self, obs: Observation, o: Option, ctx: GameContext) -> int:
         """EVOLVE（進化）オプションのスコア。
 
         相手バトルポケモンをマクノシタで倒せる場面では進化を抑制する。
         """
+        assert o.inPlayArea is not None
         pokemon = get_card(obs, o.inPlayArea, o.inPlayIndex, ctx.own_index)
         assert pokemon is not None
         if pokemon.id == self.Makuhita and self._state.plan.target == 0:
@@ -539,16 +547,17 @@ class MegaLucarioDeckStrategy:
         assert isinstance(pokemon, Pokemon)
         return 9000 + len(pokemon.energies)
 
-    def _score_ability(self, obs: Observation, o, ctx: GameContext) -> int:
+    def _score_ability(self, obs: Observation, o: Option, ctx: GameContext) -> int:
         """ABILITY（特性）オプションのスコア。
 
         ルミオスシティジムは手張りの代替手段なので低優先にする。
         """
+        assert o.area is not None
         card = get_card(obs, o.area, o.index, ctx.own_index)
         assert card is not None
         return 1 if card.id == self.Lumiose_City else 30000
 
-    def _score_attack(self, o) -> int:
+    def _score_attack(self, o: Option) -> int:
         """ATTACK オプションのスコア。
 
         攻撃計画で選んだワザインデックスと一致する場合に加点する。
@@ -558,7 +567,7 @@ class MegaLucarioDeckStrategy:
         score += 100 if (self._state.plan.attack_index == 1) == is_mega_brave else 0
         return score
 
-    def score_option(self, obs: Observation, o, ctx: GameContext) -> int:
+    def score_option(self, obs: Observation, o: Option, ctx: GameContext) -> int:
         """OptionType に応じてスコア関数をディスパッチする。
 
         負のスコアを返すと他の選択肢が優先される。
@@ -566,6 +575,7 @@ class MegaLucarioDeckStrategy:
         """
         match o.type:
             case OptionType.NUMBER:
+                assert o.number is not None
                 return o.number
             case OptionType.YES:
                 return 1
@@ -586,10 +596,11 @@ class MegaLucarioDeckStrategy:
             case _:
                 return 0
 
-    def post_pick(self, obs: Observation, top_option) -> None:
+    def post_pick(self, obs: Observation, top_option: Option) -> None:
         """MAINコンテキストでのアクション選択後に状態を更新する。"""
         if top_option.type == OptionType.ABILITY:
             assert obs.current is not None
+            assert top_option.area is not None
             card = get_card(
                 obs, top_option.area, top_option.index, obs.current.yourIndex
             )
