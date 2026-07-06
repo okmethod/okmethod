@@ -68,9 +68,8 @@ class MegaLucarioDeckStrategy:
     # ワザID定数
     Mega_Brave_Attack = 983
 
-    OWN_DECK: list[int] = read_deck_csv()
-
     def __init__(self) -> None:
+        self.OWN_DECK = read_deck_csv()
         self._state = MegaLucarioTurnState()
 
     def reset_turn(self) -> None:
