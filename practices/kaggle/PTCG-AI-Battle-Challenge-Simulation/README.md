@@ -1,8 +1,7 @@
 # PTCG AI Battle Challenge Simulation
 
-https://ptcg-abc.pokemon.co.jp/
-
-https://www.kaggle.com/competitions/pokemon-tcg-ai-battle
+- 公式サイト: https://ptcg-abc.pokemon.co.jp/
+- Kaggleコンペ: https://www.kaggle.com/competitions/pokemon-tcg-ai-battle
 
 ## ディレクトリ構成
 
