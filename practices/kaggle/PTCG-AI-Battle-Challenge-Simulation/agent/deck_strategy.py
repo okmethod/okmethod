@@ -3,7 +3,6 @@
 メガルカリオexをメインアタッカーに、ハリテヤマとソルロックをサブに使い分けるデッキ。
 """
 
-from collections import defaultdict
 from dataclasses import dataclass, field
 
 from cg.api import (
@@ -20,7 +19,14 @@ from cg.api import (
 )
 
 from models import AttackPlan, GameContext
-from utils import card_table, get_card, prize_count, read_deck_csv
+from utils import (
+    calc_damage,
+    card_table,
+    collect_zone_counts,
+    get_card,
+    prize_count,
+    read_deck_csv,
+)
 
 
 @dataclass
@@ -40,14 +46,16 @@ class MegaLucarioDeckStrategy:
     ## メソッド構成（呼び出し階層）
     - reset_turn                   : ターン開始時にターン内状態をリセット
     - collect_context              : 盤面スナップショットを GameContext に収集
+        - collect_zone_counts [util] : フィールド・手札・捨て札枚数を集計
     - update_attack_plan           : 全攻撃者×対象を総当たりして最善攻撃計画を立案
         - _collect_action_flags    : MAIN で可能な行動フラグ（切替/呼出/メガブレイブ）を収集
         - _build_attack_configs    : ポケモン種別ごとに使用可能な攻撃設定を組み立て
             - _can_makuhita_evolve : 指定位置のマクノシタが今ターン進化できるか判定
-        - _calc_damage             : 弱点・抵抗力を適用した実ダメージを算出
+        - calc_damage [util]       : 弱点・抵抗力を適用した実ダメージを算出
         - _calc_combo_score        : 攻撃者×対象の組み合わせスコアを算出
             - _score_pokemon       : 相手ポケモンの撃破優先度スコア
-    - score_option                 : OptionType 別スコア関数へディスパッチ
+    - score_option [基底]          : NUMBER/YES を処理し _score_deck_option へ委譲
+    - _score_deck_option           : OptionType 別スコア関数へディスパッチ
         - _score_card              : CARD を SelectContext 別サブ関数へディスパッチ
             - _score_card_switch   : SWITCH / TO_ACTIVE コンテキスト
             - _score_card_setup    : SETUP_ACTIVE_POKEMON コンテキスト
@@ -109,37 +117,21 @@ class MegaLucarioDeckStrategy:
         own_index = game_state.yourIndex
         own_state = game_state.players[own_index]
 
-        field_counts: defaultdict[int, int] = defaultdict(int)
-        hand_counts: defaultdict[int, int] = defaultdict(int)
-        discard_counts: defaultdict[int, int] = defaultdict(int)
+        field_counts, hand_counts, discard_counts, stadium_id, can_attack = (
+            collect_zone_counts(obs, own_index)
+        )
 
         main_attacker_ready = False
         sub_attacker_ready = False
         for card in own_state.active + own_state.bench:
             if card is None:
                 continue
-            field_counts[card.id] += 1
             if card.id in (self.Makuhita, self.Hariyama):
                 if len(card.energies) >= 3:
                     sub_attacker_ready = True
             elif card.id in (self.Riolu, self.Mega_Lucario_ex):
                 if len(card.energies) >= 2:
                     main_attacker_ready = True
-
-        assert own_state.hand is not None
-        for hand_card in own_state.hand:
-            hand_counts[hand_card.id] += 1
-
-        for discard_card in own_state.discard:
-            discard_counts[discard_card.id] += 1
-
-        stadium_id = 0
-        for stadium_card in game_state.stadium:
-            stadium_id = stadium_card.id
-
-        can_attack = obs.select is not None and any(
-            o.type == OptionType.ATTACK for o in obs.select.option
-        )
 
         return GameContext(
             own_index=own_index,
@@ -189,15 +181,6 @@ class MegaLucarioDeckStrategy:
             if index == position:
                 return True
         return False
-
-    def _calc_damage(self, base_damage: int, op_pokemon: Pokemon) -> int:
-        """弱点・抵抗力を適用した実ダメージを返す。"""
-        data = card_table[op_pokemon.id]
-        if data.weakness == EnergyType.FIGHTING:
-            return base_damage * 2
-        if data.resistance == EnergyType.FIGHTING:
-            return base_damage - 30
-        return base_damage
 
     def _build_attack_configs(
         self,
@@ -312,7 +295,7 @@ class MegaLucarioDeckStrategy:
                         continue
                     if j != 0 and not can_op_switch:
                         break
-                    damage = self._calc_damage(base_damage, op_pokemon)
+                    damage = calc_damage(base_damage, op_pokemon, EnergyType.FIGHTING)
                     score = self._calc_combo_score(
                         damage, base_score, energy_count, op_pokemon, op_state, i, j
                     )

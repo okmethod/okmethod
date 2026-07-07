@@ -5,8 +5,17 @@ Kaggle 実行環境への対応（read_deck_csv）をまとめる。
 """
 
 import os
+from collections import defaultdict
 
-from cg.api import AreaType, Card, Observation, Pokemon, all_card_data
+from cg.api import (
+    AreaType,
+    Card,
+    EnergyType,
+    Observation,
+    OptionType,
+    Pokemon,
+    all_card_data,
+)
 
 # ゲームルールに関わるカードID定数
 _LEGACY_ENERGY_ID = 12  # レガシーエネルギー
@@ -70,6 +79,54 @@ def get_card(
             return obs.current.looking[index]
         case _:
             return None
+
+
+def calc_damage(
+    base_damage: int, op_pokemon: Pokemon, attacker_type: EnergyType
+) -> int:
+    """弱点・抵抗力を適用した実ダメージを返す。"""
+    data = card_table[op_pokemon.id]
+    if data.weakness == attacker_type:
+        return base_damage * 2
+    if data.resistance == attacker_type:
+        return base_damage - 30
+    return base_damage
+
+
+def collect_zone_counts(
+    obs: Observation, own_index: int
+) -> tuple[
+    defaultdict[int, int], defaultdict[int, int], defaultdict[int, int], int, bool
+]:
+    """フィールド・手札・捨て札のカード枚数、スタジアムID、攻撃可否を返す。"""
+    assert obs.current is not None
+    game_state = obs.current
+    own_state = game_state.players[own_index]
+
+    field_counts: defaultdict[int, int] = defaultdict(int)
+    hand_counts: defaultdict[int, int] = defaultdict(int)
+    discard_counts: defaultdict[int, int] = defaultdict(int)
+
+    for field_card in own_state.active + own_state.bench:
+        if field_card is not None:
+            field_counts[field_card.id] += 1
+
+    assert own_state.hand is not None
+    for hand_card in own_state.hand:
+        hand_counts[hand_card.id] += 1
+
+    for discard_card in own_state.discard:
+        discard_counts[discard_card.id] += 1
+
+    stadium_id = 0
+    for stadium_card in game_state.stadium:
+        stadium_id = stadium_card.id
+
+    can_attack = obs.select is not None and any(
+        o.type == OptionType.ATTACK for o in obs.select.option
+    )
+
+    return field_counts, hand_counts, discard_counts, stadium_id, can_attack
 
 
 def prize_count(pokemon: Pokemon) -> int:
