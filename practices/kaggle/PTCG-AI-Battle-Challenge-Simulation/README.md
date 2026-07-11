@@ -8,7 +8,7 @@
 `models / utils / main` を共通フレームワーク層、`decks/` をデッキ層として分離。  
 デッキ固有の実装が各デッキパッケージ内に閉じるよう設計している。
 
-**デッキ切り替えは `agent/decks/__init__.py` の import 1行を変更するだけ。**
+**デッキ切り替えは `agent/decks/active_deck` の内容を書き換えるだけ。**
 
 ## ディレクトリ構成
 
@@ -23,7 +23,8 @@ kaggle/PTCG-AI-Battle-Challenge-Simulation/
 │   ├── utils.py   # 共通ユーティリティ
 │   │
 │   ├── decks/     # デッキパッケージ群（Strategy Pattern）
-│   │   ├── __init__.py      # アクティブデッキのセレクタ（切り替え時はここを編集）
+│   │   ├── active_deck      # アクティブデッキ名（切り替え時はここを編集）
+│   │   ├── __init__.py      # active_deck を読み込むセレクタ
 │   │   └── [deck_package]/  # デッキパッケージ
 │   │
 │   └── main.py    # エントリポイント

@@ -22,7 +22,8 @@ uv run poe fix   # ruff 自動修正
 
 - フレームワーク層: `agent/` 直下の `models`, `utils`, `main`
 - デッキ層: `agent/decks/` 配下のデッキパッケージ群
-  - `__init__.py`: アクティブデッキのセレクタ。**デッキを切り替える際はこのファイルの import を変更する**（コメントアウト切り替え）
+  - `active_deck`: アクティブデッキ名を1行で記載。**デッキを切り替える際はこのファイルを変更する**
+  - `__init__.py`: `active_deck` を読み込んで対応するデッキをインポートするセレクタ
   - `mega_lucario/`: メガルカリオデッキパッケージ
 
 カードリストと各デッキの戦略については `docs/` ディレクトリ参照。
@@ -39,6 +40,6 @@ uv run poe fix   # ruff 自動修正
 - `main.py` に `agent()` 関数が存在すること（エントリポイント固定）
 - `agent/` 配下のファイルを `tar -czf submission.tar.gz` でまとめて提出（`poe build`）
 - 提出物に含めるファイル: `main.py` / `utils.py` / `models.py` / `cg/` / `decks/`（全デッキパッケージ含む）
-- **デッキ切り替え時は `agent/decks/__init__.py` の import のみ変更する**（build コマンドは `decks/` ごと同梱するため変更不要）
+- **デッキ切り替え時は `agent/decks/active_deck` の内容を変更する**（`__init__.py` と build コマンドが自動的にそのデッキを参照する）
 - Kaggle実行環境はインターネット遮断（外部API・LLM呼び出し不可）
 - `md` / `pyproject.toml` / `tests/` は提出物に含めない（`poe build` が自動除外）
