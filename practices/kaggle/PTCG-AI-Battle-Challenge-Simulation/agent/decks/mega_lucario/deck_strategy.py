@@ -67,6 +67,7 @@ class MegaLucarioDeckStrategy:
             - _score_energy  (*)   : (上記と共有)
         - _score_evolve            : EVOLVE オプションのスコア
         - _score_ability           : ABILITY オプションのスコア
+        - _score_retreat           : RETREAT オプションのスコア
         - _score_attack            : ATTACK オプションのスコア
     - post_pick                    : アクション選択後に状態を更新
     """
@@ -561,6 +562,10 @@ class MegaLucarioDeckStrategy:
         assert card is not None
         return 1 if card.id == self.Lumiose_City else 30000
 
+    def _score_retreat(self, obs: Observation, o: Option, ctx: GameContext) -> int:
+        """RETREAT オプションのスコア。"""
+        return 2000 if self._state.plan.attacker >= 1 else -1
+
     def _score_attack(self, o: Option) -> int:
         """§7 — ATTACK オプションのスコア。
 
@@ -594,7 +599,7 @@ class MegaLucarioDeckStrategy:
             case OptionType.ABILITY:
                 return self._score_ability(obs, o, ctx)
             case OptionType.RETREAT:
-                return 2000 if self._state.plan.attacker >= 1 else -1
+                return self._score_retreat(obs, o, ctx)
             case OptionType.ATTACK:
                 return self._score_attack(o)
             case _:
