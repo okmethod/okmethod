@@ -8,7 +8,7 @@ AIエージェントを実装して他参加者と自動対戦させ、レーテ
 - 公式サイト: https://ptcg-abc.pokemon.co.jp/
 - Kaggleコンペ: https://www.kaggle.com/competitions/pokemon-tcg-ai-battle
 
-## 開発コマンド（agent/ ディレクトリで実行）
+## 開発コマンド（プロジェクトルートで実行）
 
 ```bash
 uv run poe test  # テスト実行
@@ -18,25 +18,27 @@ uv run poe fix   # ruff 自動修正
 
 ## モジュール設計
 
-`models`, `utils`, `main` をフレームワーク層、`decks/` 配下をデッキ層として分離。
+フレームワーク層とデッキ層を分離し、デッキを切り替え可能（Strategy Pattern）としている。
 
-- `decks/__init__.py`: アクティブデッキのセレクタ。**デッキを切り替える際はこのファイルの import を変更する**（コメントアウト切り替え）
-- `decks/mega_lucario/`: メガルカリオデッキパッケージ（`deck_strategy.py` + `deck_recipe.csv`）
+- フレームワーク層: `agent/` 直下の `models`, `utils`, `main`
+- デッキ層: `agent/decks/` 配下のデッキパッケージ群
+  - `__init__.py`: アクティブデッキのセレクタ。**デッキを切り替える際はこのファイルの import を変更する**（コメントアウト切り替え）
+  - `mega_lucario/`: メガルカリオデッキパッケージ
 
-デッキ固有の実装が各パッケージ内に閉じるよう設計している。
+カードリストと各デッキの戦略については `docs/` ディレクトリ参照。
 
 ## 技術仕様
 
-- `cg/`: ポケモン社提供のC++製TCGシミュレータ。編集不要。`api.py` に盤面データ構造とMCTS用APIが定義されている
+- `agent/cg/`: ポケモン社提供のC++製TCGシミュレータ。編集不要。`api.py` に盤面データ構造とMCTS用APIが定義されている
 - `agent()` は1ターンに複数回呼ばれるため、ターン間の状態保持にはグローバル変数またはインスタンス変数を使う
-- `JP_Card_Data.csv`: カードID → 日本語カード名のマスターデータ（2103枚）
-- `cg/api.py` の `all_card_data()`: 全カードのメタデータ（HP・ワザ・タイプ等）をAPIで取得可能
+- `docs/JP_Card_Data.csv`: カードID → 日本語カード名のマスターデータ（2103枚）
+- `agent/cg/api.py` の `all_card_data()`: 全カードのメタデータ（HP・ワザ・タイプ等）をAPIで取得可能
 
 ## 提出のルール
 
 - `main.py` に `agent()` 関数が存在すること（エントリポイント固定）
-- `agent/` 直下のファイルを `tar -czf submission.tar.gz` でまとめて提出（`poe build`）
+- `agent/` 配下のファイルを `tar -czf submission.tar.gz` でまとめて提出（`poe build`）
 - 提出物に含めるファイル: `main.py` / `utils.py` / `models.py` / `cg/` / `decks/`（全デッキパッケージ含む）
-- **デッキ切り替え時は `decks/__init__.py` の import のみ変更する**（build コマンドは `decks/` ごと同梱するため変更不要）
+- **デッキ切り替え時は `agent/decks/__init__.py` の import のみ変更する**（build コマンドは `decks/` ごと同梱するため変更不要）
 - Kaggle実行環境はインターネット遮断（外部API・LLM呼び出し不可）
 - `md` / `pyproject.toml` / `tests/` は提出物に含めない（`poe build` が自動除外）

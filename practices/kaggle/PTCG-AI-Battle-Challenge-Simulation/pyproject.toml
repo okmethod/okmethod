@@ -16,17 +16,17 @@ dev = [
 ]
 
 [tool.ruff]
-exclude = ["cg/"]
+exclude = ["agent/cg/"]
 
 [tool.mypy]
-exclude = ["^cg/"]
+exclude = ["^agent/cg/"]
 
 [[tool.mypy.overrides]]
 module = "cg.*"
 ignore_errors = true
 
 [tool.pytest.ini_options]
-pythonpath = ["."]
+pythonpath = ["agent"]
 testpaths = ["tests"]
 
 [tool.poe]
@@ -38,7 +38,7 @@ ruff-check = "ruff check ."
 ruff-fix = "ruff check . --fix"
 mypy = "mypy ."
 test = "pytest tests/"
-test-coverage = { shell = "pytest tests/ --cov=. --cov-branch --cov-report=term-missing --junitxml=pytest.xml | tee pytest-coverage.txt" }
+test-coverage = { shell = "pytest tests/ --cov=agent --cov-branch --cov-report=term-missing --junitxml=pytest.xml | tee pytest-coverage.txt" }
 lint = ["ruff-format", "ruff-check", "mypy"]
 fix = ["ruff-format", "ruff-fix"]
-build = { shell = "tar -czf ../submission.tar.gz main.py models.py utils.py cg/ decks/ && echo 'Created submission.tar.gz'" }
+build = { shell = "tar -czf submission.tar.gz -C agent main.py models.py utils.py cg/ decks/ && echo 'Created submission.tar.gz'" }

@@ -91,11 +91,11 @@ class TestReadDeckCsv:
     """read_deck_csv() のテスト。CSV から正しくカードIDリストが読み込まれるかを確認する。"""
 
     def test_returns_60_card_ids(self):
-        result = read_deck_csv()
+        result = read_deck_csv("decks/mega_lucario/deck_recipe.csv")
         assert len(result) == 60
 
     def test_all_elements_are_int(self):
-        result = read_deck_csv()
+        result = read_deck_csv("decks/mega_lucario/deck_recipe.csv")
         assert all(isinstance(card_id, int) for card_id in result)
 
 
