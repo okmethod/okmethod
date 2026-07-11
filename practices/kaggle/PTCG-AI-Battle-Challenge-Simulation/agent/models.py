@@ -4,7 +4,7 @@
 """
 
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Protocol
 
 from cg.api import Observation, Option
@@ -27,7 +27,36 @@ class GameContext:
     stadium_id: int
     main_attacker_ready: bool  # メインアタッカーがエネルギー要件を満たしているか
     sub_attacker_ready: bool  # サブアタッカーがエネルギー要件を満たしているか
+    conserve_energy: bool = False  # エネルギー付与を抑制するか（エネルギー充足済み等）
     can_attack: bool = False
+
+
+@dataclass
+class ScoreTiers:
+    """アクション種別間の優先度ティア。DeckStrategyBase.TIERS として設定する。"""
+
+    win: int = 50_000
+    ability: int = 30_000
+    play_pokemon: int = 20_000
+    play_trainer: int = 10_000
+    evolve_base: int = 9_000
+    energy_base: int = 8_000
+    retreat_base: int = 2_000
+    attack: int = 1_000
+    active_attacker: int = 220
+    active_target: int = 300
+
+
+@dataclass
+class DeckWeights:
+    """デッキスコア計算の重みパラメータ。DeckStrategyBase.WEIGHTS として設定する。"""
+
+    energy_attach_bonus: int = 200
+    prize_score_weight: int = 1_000
+    energy_score_weight: int = 150
+    tool_score_weight: int = 100
+    stage2_bonus: int = 250
+    stage1_bonus: int = 130
 
 
 @dataclass
@@ -44,6 +73,21 @@ class AttackPlan:
     needs_energy_attach: bool = False  # そのターン手張りが必要かどうか
 
 
+@dataclass
+class AttackCandidate(AttackPlan):
+    """AttackPlan に評価スコアを付加した候補。_generate_plan_candidates が yield する。"""
+
+    score: int = field(kw_only=True)
+
+
+@dataclass(frozen=True)
+class PlanFlags:
+    """MAINコンテキストで実行可能な行動フラグ"""
+
+    can_switch: bool  # 自側ベンチ切替が可能か
+    can_op_switch: bool  # 相手側ベンチ切替が可能か
+
+
 class DeckStrategyProtocol(Protocol):
     """デッキ実装が満たすべきインターフェース。
 
@@ -54,6 +98,6 @@ class DeckStrategyProtocol(Protocol):
 
     def reset_turn(self) -> None: ...
     def collect_context(self, obs: Observation) -> GameContext: ...
-    def update_attack_plan(self, obs: Observation, ctx: GameContext) -> None: ...
+    def plan_attack(self, obs: Observation, ctx: GameContext) -> None: ...
     def score_option(self, obs: Observation, o: Option, ctx: GameContext) -> int: ...
     def post_pick(self, obs: Observation, top_option: Option) -> None: ...

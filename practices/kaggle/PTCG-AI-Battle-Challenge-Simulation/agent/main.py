@@ -37,7 +37,7 @@ def agent(obs_dict: dict) -> list[int]:
 
     # 評価フェーズ: コンテキスト収集・攻撃計画立案・スコアリング（デッキ固有）
     ctx = _deck.collect_context(obs)
-    _deck.update_attack_plan(obs, ctx)
+    _deck.plan_attack(obs, ctx)
     scores = [_deck.score_option(obs, o, ctx) for o in obs.select.option]
 
     # 行動選択フェーズ: スコア降順で上位 maxCount 件を返す

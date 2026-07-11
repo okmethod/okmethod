@@ -26,14 +26,14 @@ def test_agent_returns_deck_on_deck_selection():
 def test_reset_turn_clears_attack_plan():
     """reset_turn() でターン内の攻撃計画が初期値に戻る。"""
     strategy = DeckStrategy()
-    strategy._state.plan.attacker = 2
-    strategy._state.plan.target = 1
-    strategy._state.plan.attack_index = 0
-    strategy._state.plan.needs_energy_attach = True
+    strategy._plan.attacker = 2
+    strategy._plan.target = 1
+    strategy._plan.attack_index = 0
+    strategy._plan.needs_energy_attach = True
 
     strategy.reset_turn()
 
-    assert strategy._state.plan.attacker == -1
-    assert strategy._state.plan.target == -1
-    assert strategy._state.plan.attack_index == -1
-    assert strategy._state.plan.needs_energy_attach is False
+    assert strategy._plan.attacker == -1
+    assert strategy._plan.target == -1
+    assert strategy._plan.attack_index == -1
+    assert strategy._plan.needs_energy_attach is False
