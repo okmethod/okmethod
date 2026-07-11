@@ -1,6 +1,7 @@
-"""デッキ固有の戦略ロジック（Mega Lucario ex Deck）。
+"""メガルカリオデッキ固有の戦略ロジック。
 
 メガルカリオexをメインアタッカーに、ハリテヤマとソルロックをサブに使い分けるデッキ。
+詳細: docs/decks/strategy_mega_lucario.md
 """
 
 from dataclasses import dataclass, field

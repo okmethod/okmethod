@@ -9,6 +9,8 @@ _active = (Path(__file__).parent / "active_deck").read_text().strip()
 
 if _active == "mega_lucario":
     from .mega_lucario.deck_strategy import MegaLucarioDeckStrategy as DeckStrategy
+elif _active == "fuudin":
+    from .fuudin.deck_strategy import FuudinDeckStrategy as DeckStrategy
 else:
     raise ValueError(f"Unknown deck: {_active}")
 
