@@ -510,7 +510,7 @@ class FuudinDeckStrategy:
 
         return 2000 if self._state.plan.attacker >= 1 else -1
 
-    def _score_attack(self) -> int:
+    def _score_attack(self, o: Option) -> int:
         """ATTACK オプションのスコア。フーディンはワザが1つのため固定値を返す。"""
         return 1000
 
@@ -539,7 +539,7 @@ class FuudinDeckStrategy:
             case OptionType.RETREAT:
                 return self._score_retreat(obs, o, ctx)
             case OptionType.ATTACK:
-                return self._score_attack()
+                return self._score_attack(o)
             case _:
                 return 0
 
