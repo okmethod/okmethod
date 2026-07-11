@@ -4,8 +4,15 @@
 """
 
 from pathlib import Path
+from typing import TYPE_CHECKING, Union
+
+if TYPE_CHECKING:
+    from .fuudin.deck_strategy import FuudinDeckStrategy
+    from .mega_lucario.deck_strategy import MegaLucarioDeckStrategy
 
 _active = (Path(__file__).parent / "active_deck").read_text().strip()
+
+DeckStrategy: "Union[type[MegaLucarioDeckStrategy], type[FuudinDeckStrategy]]"
 
 if _active == "mega_lucario":
     from .mega_lucario.deck_strategy import MegaLucarioDeckStrategy as DeckStrategy
