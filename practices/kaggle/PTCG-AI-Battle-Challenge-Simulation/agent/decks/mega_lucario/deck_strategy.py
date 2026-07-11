@@ -101,7 +101,7 @@ class MegaLucarioDeckStrategy:
     Mega_Brave_Attack = 983
 
     def __init__(self) -> None:
-        self.OWN_DECK = read_deck_csv()
+        self.OWN_DECK = read_deck_csv("decks/mega_lucario/deck_recipe.csv")
         self._state = MegaLucarioTurnState()
 
     def reset_turn(self) -> None:

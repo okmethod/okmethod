@@ -5,14 +5,14 @@
 
 from cg.api import Observation, SelectContext, to_observation_class
 
-from deck_strategy import MegaLucarioDeckStrategy
+from decks import DeckStrategy
 from models import DeckStrategyProtocol
 
 # グローバル変数: ターン変化の検出
 _pre_turn: int = 0
 
 # グローバル変数: デッキ固有戦略の実装クラス
-_deck: DeckStrategyProtocol = MegaLucarioDeckStrategy()
+_deck: DeckStrategyProtocol = DeckStrategy()
 
 
 def agent(obs_dict: dict) -> list[int]:

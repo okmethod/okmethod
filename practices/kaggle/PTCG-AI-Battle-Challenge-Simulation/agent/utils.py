@@ -25,15 +25,18 @@ _LILLIE_PEARL_ID = 1172  # リーリエのしんじゅ
 card_table = {c.cardId: c for c in all_card_data()}
 
 
-def read_deck_csv() -> list[int]:
+def read_deck_csv(path: str = "deck_recipe.csv") -> list[int]:
     """deck.csv を読み込んでカードIDのリストを返す。
 
+    Args:
+        path: CSV ファイルのパス（デフォルト: deck_recipe.csv）。
+              各デッキパッケージは自身の CSV パスを渡す。
     Returns:
         list[int]: デッキに含まれるカードIDのリスト（60枚）。
     """
-    file_path = "deck_recipe.csv"
+    file_path = path
     if not os.path.exists(file_path):
-        file_path = "/kaggle_simulations/agent/" + file_path
+        file_path = "/kaggle_simulations/agent/" + path
     with open(file_path, "r") as file:
         csv = file.read().split("\n")
     return [int(csv[i]) for i in range(60)]

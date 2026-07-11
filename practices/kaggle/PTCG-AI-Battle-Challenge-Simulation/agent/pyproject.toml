@@ -8,11 +8,11 @@ dependencies = []
 
 [dependency-groups]
 dev = [
-    "mypy>=1.20.1",
-    "poethepoet>=0.44.0",
-    "pytest>=9.0.3",
-    "pytest-cov>=7.1.0",
-    "ruff>=0.15.11",
+  "mypy>=1.20.1",
+  "poethepoet>=0.44.0",
+  "pytest>=9.0.3",
+  "pytest-cov>=7.1.0",
+  "ruff>=0.15.11",
 ]
 
 [tool.ruff]
@@ -30,7 +30,7 @@ pythonpath = ["."]
 testpaths = ["tests"]
 
 [tool.poe]
-executor = {type = "virtualenv", location = ".venv"}
+executor = { type = "virtualenv", location = ".venv" }
 
 [tool.poe.tasks]
 ruff-format = "ruff format ."
@@ -38,7 +38,7 @@ ruff-check = "ruff check ."
 ruff-fix = "ruff check . --fix"
 mypy = "mypy ."
 test = "pytest tests/"
-test-coverage = {shell = "pytest tests/ --cov=. --cov-branch --cov-report=term-missing --junitxml=pytest.xml | tee pytest-coverage.txt"}
+test-coverage = { shell = "pytest tests/ --cov=. --cov-branch --cov-report=term-missing --junitxml=pytest.xml | tee pytest-coverage.txt" }
 lint = ["ruff-format", "ruff-check", "mypy"]
 fix = ["ruff-format", "ruff-fix"]
-build = {shell = "tar -czf ../submission.tar.gz main.py models.py deck_strategy.py deck_recipe.csv utils.py cg/ && echo 'Created submission.tar.gz'"}
+build = { shell = "tar -czf ../submission.tar.gz main.py models.py utils.py cg/ decks/ && echo 'Created submission.tar.gz'" }

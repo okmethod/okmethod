@@ -1,8 +1,8 @@
 import pytest
 from cg.game import battle_finish, battle_select, battle_start
 
+from decks import DeckStrategy
 from main import agent
-from utils import read_deck_csv
 
 
 @pytest.fixture(autouse=True)
@@ -13,7 +13,7 @@ def teardown_battle():
 
 def test_battle_completes():
     """同一デッキ同士で1試合完走し、勝敗が確定することを確認する。"""
-    deck = read_deck_csv()
+    deck = DeckStrategy().OWN_DECK
     obs, start_data = battle_start(deck, deck)
     assert obs is not None, f"Battle failed to start: errorType={start_data.errorType}"
 

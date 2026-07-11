@@ -18,7 +18,12 @@ uv run poe fix   # ruff 自動修正
 
 ## モジュール設計
 
-`models / utils / main` をフレームワーク層、`deck_strategy / deck_recipe` をデッキ層として分離。デッキ固有の実装が `deck_strategy.py` と `deck_recipe.csv` に閉じるよう設計している。
+`models`, `utils`, `main` をフレームワーク層、`decks/` 配下をデッキ層として分離。
+
+- `decks/__init__.py`: アクティブデッキのセレクタ。**デッキを切り替える際はこのファイルの import を変更する**（コメントアウト切り替え）
+- `decks/mega_lucario/`: メガルカリオデッキパッケージ（`deck_strategy.py` + `deck_recipe.csv`）
+
+デッキ固有の実装が各パッケージ内に閉じるよう設計している。
 
 ## 技術仕様
 
@@ -30,7 +35,8 @@ uv run poe fix   # ruff 自動修正
 ## 提出のルール
 
 - `main.py` に `agent()` 関数が存在すること（エントリポイント固定）
-- `agent/` 直下のファイルを `tar -czf submission.tar.gz` でまとめて提出
-- 提出物に含めるファイル: `main.py` / `utils.py` / `models.py` / `deck_strategy.py` / `deck_recipe.csv` / `cg/`
+- `agent/` 直下のファイルを `tar -czf submission.tar.gz` でまとめて提出（`poe build`）
+- 提出物に含めるファイル: `main.py` / `utils.py` / `models.py` / `cg/` / `decks/`（全デッキパッケージ含む）
+- **デッキ切り替え時は `decks/__init__.py` の import のみ変更する**（build コマンドは `decks/` ごと同梱するため変更不要）
 - Kaggle実行環境はインターネット遮断（外部API・LLM呼び出し不可）
 - `md` / `pyproject.toml` / `tests/` は提出物に含めない（`poe build` が自動除外）

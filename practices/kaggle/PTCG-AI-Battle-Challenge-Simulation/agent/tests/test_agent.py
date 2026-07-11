@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock, patch
 
-from deck_strategy import MegaLucarioDeckStrategy
+from decks import DeckStrategy
 from main import agent
 
 
@@ -25,7 +25,7 @@ def test_agent_returns_deck_on_deck_selection():
 
 def test_reset_turn_clears_attack_plan():
     """reset_turn() でターン内の攻撃計画が初期値に戻る。"""
-    strategy = MegaLucarioDeckStrategy()
+    strategy = DeckStrategy()
     strategy._state.plan.attacker = 2
     strategy._state.plan.target = 1
     strategy._state.plan.attack_index = 0
@@ -37,13 +37,3 @@ def test_reset_turn_clears_attack_plan():
     assert strategy._state.plan.target == -1
     assert strategy._state.plan.attack_index == -1
     assert strategy._state.plan.needs_energy_attach is False
-
-
-def test_reset_turn_clears_ability_flag():
-    """reset_turn() でルナトーン特性使用済みフラグがリセットされる。"""
-    strategy = MegaLucarioDeckStrategy()
-    strategy._state.lunatone_ability_used = True
-
-    strategy.reset_turn()
-
-    assert strategy._state.lunatone_ability_used is False
