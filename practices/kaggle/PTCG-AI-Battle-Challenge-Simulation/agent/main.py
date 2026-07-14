@@ -45,6 +45,6 @@ def agent(obs_dict: dict) -> list[int]:
     desc_indices = [
         i for i, _ in sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
     ]
-    if select.context == SelectContext.MAIN:
+    if select.context == SelectContext.MAIN and desc_indices:
         _deck.post_pick(obs, select.option[desc_indices[0]])
     return desc_indices[: select.maxCount]
