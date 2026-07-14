@@ -29,13 +29,17 @@ kaggle/PTCG-AI-Battle-Challenge-Simulation/
 │   │
 │   └── main.py    # エントリポイント
 │
-├── tests/         # pytestテスト
-│
 ├── docs/          # ドキュメント
 │   ├── JP_Card_Data.csv            # 日本語カードリスト
 │   └── strategy_[deck_package].md  # デッキパッケージ向け戦略ドキュメント
 │
-├── notebooks/     # 実験用ノートブック
+├── tests/         # pytestテスト
+│
+├── scripts/       # ローカル実験用スクリプト
+│
+├── notebooks/           # 実験用ノートブック・ログ
+│   ├── logs/            # 自己対戦ログ（JSONL）・ダウンロードしたリプレイ（JSON）
+│   └── *.ipynb          # 分析ノートブック
 └── README.md
 ```
 
@@ -54,4 +58,13 @@ uv run poe fix
 
 # 提出物ビルド → submission.tar.gz を Kaggle にアップロード
 uv run poe build
+
+# 自己対戦（デフォルト: mega_lucario vs fuudin, 100試合）
+uv run poe selfplay
+
+# オプション指定例
+uv run poe selfplay -n 500 --swap          # 500試合 / 先攻後攻交互
+uv run poe selfplay --d0 fuudin --d1 fuudin  # デッキ指定
 ```
+
+ログは `notebooks/logs/selfplay_<日時>.jsonl` に保存される。

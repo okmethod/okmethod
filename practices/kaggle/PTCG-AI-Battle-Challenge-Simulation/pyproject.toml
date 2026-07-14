@@ -42,3 +42,4 @@ test-coverage = { shell = "pytest tests/ --cov=agent --cov-branch --cov-report=t
 lint = ["ruff-format", "ruff-check", "mypy"]
 fix = ["ruff-format", "ruff-fix"]
 build = { shell = 'ACTIVE_DECK=$(cat agent/decks/active_deck) && tar --exclude="*/__pycache__" -czf submission.tar.gz -C agent main.py models.py utils.py deck_strategy_base.py cg/ decks/__init__.py decks/active_deck decks/$ACTIVE_DECK/ && echo "Created submission.tar.gz (deck: $ACTIVE_DECK)"' }
+selfplay = "python scripts/run_selfplay.py"

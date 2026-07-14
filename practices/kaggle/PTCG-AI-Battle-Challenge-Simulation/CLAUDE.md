@@ -11,9 +11,9 @@ AIエージェントを実装して他参加者と自動対戦させ、レーテ
 ## 開発コマンド（プロジェクトルートで実行）
 
 ```bash
-uv run poe test  # テスト実行
-uv run poe lint  # ruff + mypy
-uv run poe fix   # ruff 自動修正
+uv run poe test     # テスト実行
+uv run poe lint     # ruff + mypy
+uv run poe fix      # ruff 自動修正
 ```
 
 ## モジュール設計
@@ -28,6 +28,8 @@ uv run poe fix   # ruff 自動修正
   - `fuudin/`: フーディンデッキパッケージ
 
 カードリストと各デッキの戦略については `docs/` ディレクトリ参照。
+
+ローカル実験については `scripts/` と `notebooks/` ディレクトリ参照。
 
 ## 技術仕様
 
