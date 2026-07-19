@@ -15,6 +15,7 @@
 - [アーキテクチャ設計の心得](./development-domains/architecting-principles/README.md)
 - [テスト設計の心得](./development-domains/testing-principles/README.md)
 - [コーディングの心得](./development-domains/coding-principles/README.md)
+- [運用保守設計の心得](./development-domains/sustaining-principles/README.md)
 
 **「心得」とは**:
 
