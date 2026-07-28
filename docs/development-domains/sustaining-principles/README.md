@@ -28,7 +28,7 @@
 
 ## [delivery: TODO](./assets/01-delivery.md)
 
-コンセプト: **_TODO_**
+コンセプト: TODO
 
 トピック:
 
@@ -38,7 +38,7 @@
 
 ## [observability: TODO](./assets/02-observability.md)
 
-コンセプト: **_TODO_**
+コンセプト: TODO
 
 トピック:
 
@@ -48,7 +48,7 @@
 
 ## [incident: TODO](./assets/03-incident.md)
 
-コンセプト: **_TODO_**
+コンセプト: TODO
 
 トピック:
 
