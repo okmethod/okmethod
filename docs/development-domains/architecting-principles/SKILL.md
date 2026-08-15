@@ -22,6 +22,7 @@ description: |
 - **`assets/architecture-styles-cheatsheet.md`** — アーキテクチャスタイル比較表
 - **`assets/GoF-design-patterns-cheatsheet.md`** — GoF デザインパターン一覧
 - **`assets/clean-architecture-case-study.md`** — Clean Architecture 実践例
+- **`assets/c4model-cheatsheet.md`** — C4 モデル（可視化の枠組み）と本ガイドの設計層の対応
 
 ---
 
@@ -83,6 +84,7 @@ description: |
 - スタイル比較・選定の問いが出た場合 → `assets/architecture-styles-cheatsheet.md`
 - GoF パターン名が会話に登場した場合 → `assets/GoF-design-patterns-cheatsheet.md`
 - Clean Architecture / Hexagonal / Onion の実装例が求められた場合 → `assets/clean-architecture-case-study.md`
+- アーキテクチャの図示にあたり抽象レベル・対象読者の整理が必要な場合、または C4 モデルの相談が出た場合 → `assets/c4model-cheatsheet.md`
 
 **読み込んだ後の処理**:
 

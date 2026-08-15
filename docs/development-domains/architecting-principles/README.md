@@ -36,6 +36,8 @@
   - キーワード: 横断的関心事（Cross-Cutting Concerns）、エラー時のリトライ方針、整合性モデル
   - 参考: [GoF デザインパターン一覧](./assets/GoF-design-patterns-cheatsheet.md)
 
+> **用語の注意**: 本ガイドで「コンポーネント」と呼ぶものは、多くの場合 C4 モデルの **Container**（プロセス／デプロイ単位）に相当する。C4 本来の Component（Container 内部の責務単位）とは粒度が異なる。詳細は [C4 モデル チートシート](./assets/c4model-cheatsheet.md) 参照。
+
 また、前工程（要件定義）から後工程（実装）への流れの中で、本ガイドの位置付けは以下の通りとなる。
 
 - Input: システム要件 (What) ・・・ [要件定義の心得](../planning-principles/README.md) 参照
@@ -88,3 +90,4 @@
 - [O'Reilly Japan ソフトウェアアーキテクチャの基礎](https://www.oreilly.co.jp//books/9784873119823/)
 - [Refactoring.Guru — Design Patterns](https://refactoring.guru/design-patterns)
 - [ソフトウェアアーキテクトが知るべき 97 のこと](https://ソフトウェアアーキテクトが知るべき97のこと.com)
+- [C4 モデル チートシート](./assets/c4model-cheatsheet.md) — アーキテクチャを対象読者・目的に応じてどの抽象レベルで図示するかの指針。本ガイドの設計層との対応も整理
