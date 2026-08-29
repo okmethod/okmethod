@@ -1,0 +1,110 @@
+name: Update README cards
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 目的:
+#   GitHub 統計カード / 使用言語カードの SVG を定期生成し、
+#   生成物専用ブランチ（readme-cards）に push する。
+#   README はそのブランチの SVG を raw URL で参照。
+#   → main の履歴を bot commit で汚さず、公開エンドポイントも持たず、
+#     プライベート集計も PAT を GitHub 内に留めたまま実現できる。
+#
+# セキュリティ設計の要点（*重要度の高い順に 1→5）:
+#   *1. 強権限 PAT の露出面を局所化 → 渡す step も、読める実行文脈も絞る
+#   *2. 外部 Action は「コミット SHA」でピン留め → 実行コードを凍結（サプライチェーン）
+#   *3. GITHUB_TOKEN は最小権限（contents: write のみ） → 暴走時の被害範囲を限定
+#   *4. トリガは schedule / workflow_dispatch のみ → 外部 PR 経由の実行面をゼロに
+#   *5. push は GITHUB_TOKEN で行い、認証情報も持ち回らない → PAT / 認証情報の露出回避
+# ─────────────────────────────────────────────────────────────────────────────
+
+# *4: 実行面を最小化。schedule / workflow_dispatch のみ（pull_request 等は使わない）。
+#     どちらも常に「デフォルトブランチの本 yaml」で実行されるため、
+#     別ブランチの改造版が secret 付きで走ることはない。
+#     workflow_dispatch を叩けるのは write 権限保持者だけ。
+on:
+  workflow_dispatch:
+  schedule:
+    # 1日1回。分は正時（:00）を避け混雑遅延を回避。UTC 21:17 = JST 06:17。
+    - cron: "17 21 * * *"
+
+# 多重実行による push 競合を防止
+concurrency:
+  group: readme-cards
+  cancel-in-progress: false
+
+# *3: ジョブに付与する GITHUB_TOKEN 権限を最小化。
+#     専用ブランチへの push に必要な contents: write だけ。他は暗黙 read も付けない。
+permissions:
+  contents: write
+
+jobs:
+  update-cards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    # *1: secret を Environment に隔離し、読める文脈を局所化する。
+    #     Settings → Environments で "stats" を作り、Deployment branches を
+    #     「本ジョブが動くブランチ = デフォルトブランチ（main）」に限定すると、
+    #     他ブランチのワークフローは README_CARDS_PAT を読めなくなる。
+    environment: stats
+
+    steps:
+      # *5: checkout は不要。
+      #     生成 Action のコードは action_path で完結し（リポの中身に依存せず）、
+      #     出力先ディレクトリも index.js が再帰的に自動生成する。
+      #     出力は cwd（=$GITHUB_WORKSPACE, checkout 無しでも常に存在）配下に書かれるため、
+      #     リポジトリの中身にも git 状態にも依存しない。
+      #     checkout を置かないことで main 側の認証情報を持ち込む余地自体をゼロにする。
+
+      # 生成 Action の選定理由:
+      #     目的は「公開エンドポイントを持たず / PAT を GitHub 内に留め / プライベート集計」。
+      #     公式（anuraghazra/github-readme-stats）は本体がホスト型API で、
+      #     要件を満たすには Vercel 等に公開エンドポイントを立て PAT を外部へ持ち出す必要があり方針に反する。
+      #     本 Action（github-stats-extended ベース）は Actions 内で完結し上記3要件を満たす。
+      #     非公式サードパーティのため、SHA ピン留め（*2）＋PAT の read-only 最小化で担保する。
+
+      # *1: 強権限 PAT は 2 つのカード生成 step にのみ渡し、露出を局所化する。
+      # *2: 外部 Action を SHA でピン留め（v2.0.2 時点のコードに凍結）。
+      #     count_private=true でプライベートのコントリビューションも集計に含める。
+      #     ※ 事前に GitHub プロフィール設定「Include private contributions on my profile」を ON。
+      - name: Generate stats card
+        uses: stats-organization/github-readme-stats-action@e856fc8de9d7729b463c468911e232cfbdc3d55e # v2.0.2
+        with:
+          card: stats
+          options: username=${{ github.repository_owner }}&show_icons=true&count_private=true
+          path: profile/stats.svg
+          token: ${{ secrets.README_CARDS_PAT }}
+          fail_on_error: true
+
+      - name: Generate top languages card
+        uses: stats-organization/github-readme-stats-action@e856fc8de9d7729b463c468911e232cfbdc3d55e # v2.0.2
+        with:
+          card: top-langs
+          # プライベートリポの言語も集計に含めるため、ここも PAT を使用。
+          options: username=${{ github.repository_owner }}&layout=compact&langs_count=6
+          path: profile/top-langs.svg
+          token: ${{ secrets.README_CARDS_PAT }}
+          fail_on_error: true
+
+      # *5: 生成物を専用ブランチ（readme-cards）に push する。
+      #     - PAT ではなく GITHUB_TOKEN を使用（強権限トークンを push 経路に晒さない）。
+      #     - トークンはコマンド直書きを避け env 経由で注入（自動マスクに加えた予防）。
+      #     - 履歴不要な生成物なので、単一コミットを force-push で上書きし、ブランチを軽量に保つ。
+      #     - GITHUB_TOKEN による push は他ワークフローを連鎖起動しない（無限ループ防止）。
+      - name: Publish cards to dedicated branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BRANCH=readme-cards
+          tmp="$(mktemp -d)"
+          cp profile/*.svg "$tmp"/
+          cd "$tmp"
+          git init -q
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -q -b "$BRANCH"
+          git add ./*.svg
+          git commit -q -m ":chart_with_upwards_trend: update README cards"
+          git push -q --force \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            "$BRANCH"
