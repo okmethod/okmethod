@@ -4,6 +4,9 @@
 
 - **回答は日本語で簡潔に行う**
 - **サブエージェントを積極活用しトークン節約する**:
+  - 3ファイル以上の調査・コード検索 → Explore
+  - 実装計画の策定 → Plan
+  - テスト/Lint/ビルド実行 → Bash (background可)
 
 ## プロジェクト概要
 
@@ -30,3 +33,10 @@
 - `practices/backends/`: FastAPI / Express / Gin / Spring Boot の構成例
 - `practices/frontends/`: Svelte + TailwindCSS (Skeleton UI) の構成例
 - `practices/fullstacks/`: T3 Stack (Next.js + tRPC) / Ruby on Rails の構成例
+
+## .claude/rules ディレクトリ
+
+言語横断で共通利用するコーディング規約の原典（SSoT）。他プロジェクトへ流用する雛形も兼ねる。
+
+- `coding-guide.md`: 言語非依存の規約（命名・粒度・明確さ・Why コメント・YAGNI・負債明示）。言語非依存の事項はここに集約する
+- `typescript-guide.md` / `svelte-guide.md` / `python-guide.md`: 各言語でしか成立しない事項のみ。バージョン・コマンド等のPJ固有差分は各PJ側で上書きする
